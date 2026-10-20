@@ -14,7 +14,7 @@
 <body>
 <header class="site-header">
 <a class="brand" href="#top" aria-label="Agrolyst Control Centre home"><img src="https://agrolystfarms.com/favicon.jpeg" alt=""><span class="brand-name">AGROLYST<small>CONTROL CENTRE</small></span></a>
-<nav class="nav" aria-label="Dashboard navigation"><a href="#overview">Overview</a><a href="#seller-page">Seller page</a><a href="#oauth">OAuth applications</a><a href="#security">Security</a></nav>
+<nav class="nav" aria-label="Dashboard navigation"><a href="#overview">Overview</a><a href="#connect-flow">Seller connection</a><a href="#oauth">OAuth applications</a><a href="#security">Security</a></nav>
 <div class="header-actions"><span class="admin-chip">● Admin workspace</span><button class="secondary" id="logout" type="button">Sign out ↗</button></div>
 </header>
 <main class="wrap" id="top">
@@ -26,28 +26,21 @@
 <article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5M9 21v-7h6v7"/></svg></div><h3>Agrolyst Sellers</h3><p>Preview the seller page design and open the public marketplace to check the current experience.</p><div class="statline"><span>Public site</span><a href="https://agrolystfarms.com/marketplace/" style="color:var(--green);text-decoration:none">Open marketplace ↗</a></div></article>
 <article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>OAuth readiness</h3><p>The OAuth area is designed into this dashboard. Live client creation awaits its protected backend.</p><div class="statline"><span>Registration API</span><span class="tag pending">Not connected</span></div></article>
 </div>
-<section class="section" id="seller-page">
-<div class="section-head"><div><div class="eyebrow">Seller experience</div><h2>Agrolyst Sellers page</h2><p>This is a design preview of the seller-facing page area you want to customise.</p></div><a class="button secondary" href="https://agrolystfarms.com/marketplace/" target="_blank" rel="noopener">View live marketplace ↗</a></div>
-<div class="seller-layout">
-<div class="seller-preview">
-<div class="preview-top"><span>AGROLYST FARMS / SELLERS</span><span class="tag">Design preview</span></div>
-<div class="preview-hero"><div class="eyebrow">Grow with Agrolyst</div><h3>Your farm. Your products. A wider market.</h3><p>Connect your agricultural business with buyers and discover opportunities across the agrifood value chain.</p><a class="button" href="https://agrolystfarms.com/marketplace/" target="_blank" rel="noopener">Explore marketplace ↗</a></div>
-<div class="preview-bottom"><strong>Seller marketplace experience</strong><span>Preview only · Not yet published from this console</span></div>
-</div>
-<div class="feature-list">
-<div class="feature"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg><div><strong>Page content & messaging</strong><span>Plan the seller headline, introduction, calls to action and key selling points.</span></div></div>
-<div class="feature"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.5-4 3-6 7-6s6.5 2 7 6"/></svg><div><strong>Seller profiles & trust</strong><span>Seller information, product categories and verification indicators can be added as the seller workflow is connected.</span></div></div>
-<div class="feature"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-4 3 2 5-6"/></svg><div><strong>Marketplace actions</strong><span>Product listings, seller onboarding and profile editing require the marketplace data and permissions to be connected.</span></div></div>
-</div>
+<section class="section" id="connect-flow">
+<div class="section-head"><div><div class="eyebrow">Seller account connection</div><h2>How sellers connect with Agrolyst</h2><p>The OAuth consent screen lets sellers sign in, review requested permissions, and approve or deny access.</p></div><a class="button secondary" href="/oauth/consent/">Preview connection screen ↗</a></div>
+<div class="grid">
+<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/></svg></div><h3>1. Connect</h3><p>The partner app redirects a seller to the Agrolyst authorization endpoint with its client ID, redirect URL, and requested scopes.</p><div class="statline"><span>Start point</span><span class="tag">OAuth request</span></div></article>
+<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg></div><h3>2. Sign in & review</h3><p>The seller signs in with their own Agrolyst account. The consent page displays the application identity, redirect URL, and requested permissions.</p><div class="statline"><span>Seller control</span><span class="tag">Explicit consent</span></div></article>
+<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></div><h3>3. Approve or deny</h3><p>Supabase Auth completes the OAuth authorization-code flow and returns the seller to the registered callback URL if they approve.</p><div class="statline"><span>Token exchange</span><span class="tag pending">Enable OAuth server</span></div></article>
 </div>
 </section>
 <section class="section" id="oauth">
-<div class="section-head"><div><div class="eyebrow">Identity & integrations</div><h2>OAuth applications</h2><p>This is where registered applications, client IDs, redirect URLs and status will appear.</p></div><span class="tag pending">Backend required</span></div>
+<div class="section-head"><div><div class="eyebrow">Identity & integrations</div><h2>OAuth applications</h2><p>Manage registered clients and the applications requesting seller account access.</p></div><span class="tag pending">Backend required</span></div>
 <div class="grid">
 <article class="card oauth-card">
 <div class="oauth-head"><div><h3>Application registry</h3><p>When the secure API is connected, each OAuth client will be listed here with its name, client ID, allowed redirect URLs and active status.</p></div><span class="tag pending">Not live yet</span></div>
-<div class="oauth-status"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><strong>OAuth client management is not connected yet</strong><p>This page currently shows the planned interface only. It does not create OAuth clients or issue client secrets. Those actions must run through a protected server-side API; never place a client secret or Supabase service-role key in browser code.</p></div></div>
-<div class="table-wrap"><table class="oauth-table"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>REDIRECT URI</th><th>STATUS</th></tr></thead><tbody><tr><td colspan="4" class="empty">No OAuth applications are connected to this dashboard yet.</td></tr></tbody></table></div>
+<div class="oauth-status"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><strong>OAuth client management is not connected yet</strong><p>The branded seller login and consent page is being prepared. Before the flow can issue authorization codes, enable OAuth 2.1 under Supabase Authentication → OAuth Server and register each client with its exact redirect URL. Never place client secrets or a Supabase service-role key in browser code.</p></div></div>
+<div class="table-wrap"><table class="oauth-table"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>REDIRECT URI</th><th>STATUS</th></tr></thead><tbody><tr><td colspan="4" class="empty">OAuth server setup and client registration are still required before live applications can appear here.</td></tr></tbody></table></div>
 <div class="mini-grid"><div class="mini"><strong>Client ID</strong><span>Public identifier shown after registration</span></div><div class="mini"><strong>Client secret</strong><span>Server-managed; never shown in full</span></div><div class="mini"><strong>Redirect URLs</strong><span>Registered and exactly validated</span></div></div>
 </article>
 <article class="card" id="security"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Security & access</h3><p>Your admin access is checked against the Supabase <code>admin_users</code> record. OAuth redirect URIs must be registered and exactly matched before authorization redirects are allowed.</p><div class="statline"><span>Session verification</span><span class="tag">Enabled</span></div></article>
