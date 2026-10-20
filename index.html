@@ -56,11 +56,11 @@
         <div id="status" class="status" role="status" aria-live="polite"></div>
         <div id="adminGate" class="lock-panel hidden">
           <strong>Administrator authorization required</strong>
-          <p>Your account is signed in, but this account has not been granted the protected <code>app_metadata.oauth_admin</code> authorization. Console management stays disabled until an administrator is assigned securely on the server.</p>
+          <p>Your account is signed in, but it is not listed as an active administrator in the protected admin allowlist. Console management stays disabled until an authorized operator adds your Auth user to the admin_users table.</p>
         </div>
         <div id="adminReady" class="lock-panel hidden">
           <strong>Identity verified</strong>
-          <p>Your account has the administrator claim. Client registration and secret-bearing operations remain unavailable until the protected server-side OAuth management API is configured.</p>
+          <p>Your account is listed as an active administrator. Client registration and secret-bearing operations remain unavailable until the protected server-side OAuth management API is configured.</p>
         </div>
         <p class="fine">Security note: this page does not store your password, expose a service-role key, or create OAuth clients in the browser. Never share client secrets in chat or public code.</p>
       </section>
@@ -106,16 +106,31 @@
           return;
         }
         const verifiedUser = data.user;
-        if (verifiedUser.app_metadata?.oauth_admin === true) {
+        const { data: adminRecord, error: adminError } = await client
+          .from("admin_users")
+          .select("user_id, display_name, role, is_active")
+          .eq("user_id", verifiedUser.id)
+          .maybeSingle();
+
+        if (adminError) {
+          gate.classList.remove("hidden");
+          ready.classList.add("hidden");
+          subtitle.textContent = "Your identity is verified, but administrator authorization could not be checked.";
+          message("We could not verify admin permissions. Confirm the admin_users table is exposed to the Data API and that its RLS policy is enabled.", "error");
+          return;
+        }
+
+        if (adminRecord && adminRecord.is_active === true) {
           ready.classList.remove("hidden");
           gate.classList.add("hidden");
-          subtitle.textContent = "Your signed-in identity carries the administrator claim. Protected actions still require the secure backend.";
-          message("Signed in as " + (verifiedUser.email || "your Agrolyst account") + ". Administrator claim detected.", "good");
+          subtitle.textContent = "Your signed-in identity is listed as an active administrator. Protected actions still require the secure backend.";
+          const label = adminRecord.display_name || verifiedUser.email || "your Agrolyst account";
+          message("Signed in as " + label + ". Active " + (adminRecord.role || "admin") + " access verified.", "good");
         } else {
           gate.classList.remove("hidden");
           ready.classList.add("hidden");
           subtitle.textContent = "Your identity is verified, but administrator access has not been granted to this account.";
-          message("Signed in as " + (verifiedUser.email || "your Agrolyst account") + ". Administrator access is not enabled.", "info");
+          message("Signed in as " + (verifiedUser.email || "your Agrolyst account") + ". No active admin record was found.", "info");
         }
       }
       if (!client) {
