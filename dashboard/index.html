@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Agrolyst Admin Dashboard</title>
+<link rel="icon" href="https://agrolystfarms.com/favicon.jpeg">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+<style>
+:root{color-scheme:dark;--bg:#071b13;--card:#103321;--line:#294b36;--green:#a4efac;--text:#f3fbf4;--muted:#aac3b0}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0,#174a2c,transparent 45%),var(--bg);color:var(--text);font:16px system-ui,sans-serif;min-height:100vh}header{display:flex;justify-content:space-between;align-items:center;padding:18px max(20px,calc((100vw - 1120px)/2));border-bottom:1px solid var(--line)}header img{width:40px;height:40px;border-radius:12px;vertical-align:middle;margin-right:10px}.brand{font-weight:800;letter-spacing:.08em}.brand small{display:block;color:var(--muted);font-size:10px;margin-left:52px}button{padding:11px 15px;border:1px solid var(--line);background:transparent;color:var(--text);border-radius:10px;cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:42px 22px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(34px,5vw,54px);line-height:1.1;letter-spacing:-.04em;margin:14px 0}.muted{color:var(--muted);line-height:1.7}.pill{display:inline-block;border:1px solid #39754a;color:var(--green);border-radius:30px;padding:9px 13px;font-size:12px}.top{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{padding:24px;border:1px solid var(--line);background:linear-gradient(145deg,#143c28,#0d281b);border-radius:20px;min-height:175px;animation:fade .5s ease both}.symbol{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#214a30;color:var(--green);font-size:22px;margin-bottom:20px}h2{font-size:18px;margin:0 0 8px}.card p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}.panel{margin-top:20px;border:1px solid var(--line);border-radius:18px;background:var(--card);padding:22px}.state{padding:15px;border:1px solid var(--line);border-radius:12px;color:var(--muted)}.hidden{display:none!important}.err{color:#ffc4b8;border-color:#8a473a}footer{margin-top:42px;color:#789683;font-size:12px}@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:750px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.grid{grid-template-columns:1fr}.wrap{padding:30px 18px}.card{min-height:145px}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head>
+<body>
+<header><div class="brand"><img src="https://agrolystfarms.com/favicon.jpeg" alt="">AGROLYST<small>ADMIN CONSOLE</small></div><button id="logout">Sign out</button></header>
+<main class="wrap">
+<div id="state" class="state">Checking your admin session…</div>
+<div id="content" class="hidden">
+<div class="top"><div><div class="eyebrow">Secure administration</div><h1>Welcome back, <span id="adminName">Admin</span>.</h1><p class="muted">Signed in as <span id="adminEmail"></span>. Your admin access is verified.</p></div><span class="pill">● Active administrator</span></div>
+<div class="grid">
+<section class="card"><div class="symbol">▦</div><h2>Dashboard overview</h2><p>Your secure starting point for Agrolyst authentication administration.</p></section>
+<section class="card"><div class="symbol">⌘</div><h2>OAuth applications</h2><p>Client registration and application management will be enabled after the secure backend API is implemented.</p></section>
+<section class="card"><div class="symbol">◈</div><h2>Security & access</h2><p>Administrator access is checked against the protected Supabase admin_users table.</p></section>
+<section class="card"><div class="symbol">◎</div><h2>Admin account</h2><p>Review the verified account identity and role for this session.</p></section>
+<section class="card"><div class="symbol">✓</div><h2>Access status</h2><p>Your account is active. No client secrets are exposed in this browser.</p></section>
+<section class="card"><div class="symbol">↗</div><h2>Main website</h2><p><a style="color:var(--green)" href="https://agrolystfarms.com/">Visit Agrolyst Farms →</a></p></section>
+</div>
+<section class="panel"><h2>Workspace status</h2><p class="muted">Login and dashboard access are enabled. Creating OAuth clients, issuing secrets, and other privileged changes require a protected server-side API. Those controls remain disabled until that API is configured.</p></section>
+<footer>Agrolyst Integrated Farms and Services · Private administration workspace</footer>
+</div></main>
+<script>
+(async function(){
+const client=window.supabase.createClient("https://rcrgooivgssuerrgnuqw.supabase.co","sb_publishable_j8SoLv73ssa13M_rAJwB6g_rPb8whHD",{auth:{persistSession:true,autoRefreshToken:true}});
+const state=document.getElementById("state"),content=document.getElementById("content");
+function fail(message){state.textContent=message;state.className="state err";setTimeout(()=>location.replace("/"),2200)}
+document.getElementById("logout").onclick=async()=>{await client.auth.signOut();location.replace("/")};
+try{
+const result=await client.auth.getUser();
+if(result.error||!result.data.user){fail("Please sign in first. Returning to sign in…");return}
+const user=result.data.user;
+const check=await client.from("admin_users").select("display_name,role,is_active").eq("user_id",user.id).maybeSingle();
+if(check.error){fail("Could not verify admin access. Returning to sign in…");return}
+if(!check.data||check.data.is_active!==true){fail("This account is not an active admin. Returning to sign in…");return}
+document.getElementById("adminName").textContent=check.data.display_name||"Admin";
+document.getElementById("adminEmail").textContent=user.email||"your account";
+state.classList.add("hidden");content.classList.remove("hidden");
+}catch(e){fail("Session verification failed. Returning to sign in…")}
+})();
+</script></body></html>
