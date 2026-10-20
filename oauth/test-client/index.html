@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en-NG">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#082318"><meta name="robots" content="noindex,nofollow,noarchive">
+<title>OAuth Test Client | Agrolyst Authentication</title>
+<link rel="icon" href="https://agrolystfarms.com/favicon.jpeg" type="image/jpeg">
+<style>
+:root{color-scheme:dark;--bg:#07180f;--panel:#0d281b;--line:#294b36;--text:#f3fbf4;--muted:#a8c2af;--green:#a8efae;--red:#ffc2b7}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 0%,#17492c 0,transparent 40%),var(--bg);color:var(--text);font:15px/1.65 system-ui,-apple-system,sans-serif}.shell{width:min(760px,calc(100% - 32px));margin:0 auto;padding:28px 0 60px}.brand{display:flex;align-items:center;gap:12px;margin-bottom:34px}.brand img{width:44px;height:44px;border-radius:13px;object-fit:cover}.brand strong{display:block;letter-spacing:.12em;font-size:13px}.brand small{color:var(--muted);font-size:11px}.panel{padding:clamp(22px,5vw,36px);border:1px solid #31513a;border-radius:24px;background:linear-gradient(145deg,#133825f5,#081d13f5);box-shadow:0 28px 90px #0003}.eyebrow{color:var(--green);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}h1{font-size:clamp(30px,6vw,44px);line-height:1.1;letter-spacing:-.045em;margin:12px 0}p{color:var(--muted)}label{display:block;font-size:12px;font-weight:700;margin:17px 0 7px}input{width:100%;padding:13px 14px;border:1px solid #345441;border-radius:11px;background:#071a10;color:var(--text);font:inherit;outline:none}input:focus{border-color:var(--green)}button{width:100%;padding:13px 16px;border:0;border-radius:11px;background:var(--green);color:#092011;font:800 14px system-ui;cursor:pointer;margin-top:17px}button:disabled{opacity:.5;cursor:wait}.notice{margin-top:18px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:13px;overflow-wrap:anywhere}.notice.error{border-color:#70483d;color:var(--red)}.notice.success{border-color:#426b48;color:var(--green)}.hidden{display:none}.small{font-size:12px}.foot{font-size:12px;text-align:center;margin-top:22px}.code{white-space:pre-wrap;overflow-wrap:anywhere;background:#06140c;border:1px solid var(--line);border-radius:10px;padding:12px;color:#d8efdc;font-size:12px}
+</style>
+</head>
+<body><main class="shell">
+<header class="brand"><img src="https://agrolystfarms.com/favicon.jpeg" alt="Agrolyst Farms"><div><strong>AGROLYST FARMS</strong><small>Authentication · OAuth test client</small></div></header>
+<section class="panel">
+<div class="eyebrow">Developer test utility</div><h1>Test “Connect with Agrolyst”</h1>
+<p>This temporary test client starts a real OAuth authorization request against the Agrolyst Supabase Auth server. It uses Authorization Code + PKCE and checks the returned state. Use a test seller account.</p>
+<div id="start">
+<label for="clientId">OAuth client ID</label><input id="clientId" autocomplete="off" spellcheck="false" placeholder="Paste the public test client ID from Supabase">
+<label for="scope">Requested scope</label><input id="scope" value="email" autocomplete="off">
+<button id="connect">Start OAuth test</button>
+<p class="small">Register this exact redirect URI on the test OAuth app: <strong id="redirectUri"></strong></p>
+</div>
+<div id="result" class="hidden" aria-live="polite"></div>
+<div id="status" class="notice hidden" aria-live="polite"></div>
+</section>
+<p class="foot">Use only a public test client here. Never enter a client secret or a Supabase secret key.</p>
+</main>
+<script>
+(() => {
+  const SUPABASE_URL = "https://rcrgooivgssuerrgnuqw.supabase.co";
+  const $ = (id) => document.getElementById(id);
+  const redirectUri = window.location.origin + window.location.pathname;
+  $("redirectUri").textContent = redirectUri;
+  const params = new URLSearchParams(window.location.search);
+  const status = (message, kind = "") => {
+    $("status").textContent = message;
+    $("status").className = "notice " + kind;
+  };
+  const b64url = (bytes) => {
+    let binary = "";
+    bytes.forEach((byte) => binary += String.fromCharCode(byte));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  };
+  async function sha256(value) {
+    return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
+  }
+  function randomToken(size = 32) {
+    const bytes = new Uint8Array(size);
+    crypto.getRandomValues(bytes);
+    return b64url(bytes);
+  }
+  const error = params.get("error");
+  const code = params.get("code");
+  if (code || error) {
+    $("start").classList.add("hidden");
+    $("result").classList.remove("hidden");
+    const expectedState = sessionStorage.getItem("agrolyst_oauth_state");
+    const returnedState = params.get("state");
+    const stateOkay = !!expectedState && !!returnedState && expectedState === returnedState;
+    if (!stateOkay) {
+      status("State check failed. Treat this response as invalid and restart the test.", "error");
+    } else if (error) {
+      status("OAuth returned a denial or error: " + error + (params.get("error_description") ? " — " + params.get("error_description") : ""), "error");
+    } else {
+      status("OAuth authorization code returned and state verified. Consent and redirect succeeded. Token exchange is not performed by this lightweight test page.", "success");
+      const codeLabel = document.createElement("p");
+      codeLabel.textContent = "Authorization code (temporary; do not share it):";
+      const codeBox = document.createElement("div");
+      codeBox.className = "code";
+      codeBox.textContent = code;
+      $("result").append(codeLabel, codeBox);
+    }
+    sessionStorage.removeItem("agrolyst_oauth_state");
+    sessionStorage.removeItem("agrolyst_oauth_verifier");
+    history.replaceState({}, document.title, redirectUri);
+  } else {
+    $("connect").addEventListener("click", async () => {
+      const clientId = $("clientId").value.trim();
+      const scope = $("scope").value.trim() || "email";
+      if (!clientId) { status("Paste the public OAuth test client ID first.", "error"); return; }
+      if (!window.crypto || !crypto.subtle) { status("Secure Web Crypto is unavailable. Open this page over HTTPS.", "error"); return; }
+      $("connect").disabled = true;
+      try {
+        const verifier = randomToken(48);
+        const state = randomToken(32);
+        const challenge = b64url(await sha256(verifier));
+        sessionStorage.setItem("agrolyst_oauth_state", state);
+        sessionStorage.setItem("agrolyst_oauth_verifier", verifier);
+        const authorize = new URL(SUPABASE_URL + "/auth/v1/oauth/authorize");
+        authorize.search = new URLSearchParams({
+          response_type: "code",
+          client_id: clientId,
+          redirect_uri: redirectUri,
+          code_challenge: challenge,
+          code_challenge_method: "S256",
+          state,
+          scope
+        }).toString();
+        window.location.assign(authorize.toString());
+      } catch (e) {
+        status("Could not start OAuth: " + (e?.message || "unexpected error"), "error");
+        $("connect").disabled = false;
+      }
+    });
+  }
+})();
+</script>
+</body></html>
