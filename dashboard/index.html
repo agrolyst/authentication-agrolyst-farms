@@ -62,7 +62,7 @@
 </main>
 <script>
 (async function(){
-const client=window.supabase.createClient("https://rcrgooivgssuerrgnuqw.supabase.co","sb_publishable_j8SoLv73ssa13M_rAJwB6g_rPb8whHD",{auth:{persistSession:true,autoRefreshToken:true}});
+const client=window.supabase.createClient("https://hbfhrilouvbvcpfqwmta.supabase.co","sb_publishable_WNH9qs8wMS_umvpfUmccUA_h2lJ-yyu",{auth:{persistSession:true,autoRefreshToken:true}});
 const state=document.getElementById("state"),content=document.getElementById("content");
 function fail(message){state.textContent=message;state.className="state err";setTimeout(()=>location.replace("/"),2200)}
 document.getElementById("logout").onclick=async()=>{await client.auth.signOut();location.replace("/")};
