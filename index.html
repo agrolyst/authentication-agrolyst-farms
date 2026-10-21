@@ -52,6 +52,8 @@
           <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Your account password"></div>
           <button class="primary" id="signInButton" type="submit">Sign in securely <span aria-hidden="true">→</span></button>
         </form>
+        <button class="secondary" id="createAccountButton" type="button" style="margin-top:10px">Create authentication account</button>
+        <p class="fine" id="signupNote">New accounts do not receive administrator access automatically. An authorized admin must grant it separately.</p>
         <button class="secondary hidden" id="signOutButton" type="button">Sign out</button>
         <div id="status" class="status" role="status" aria-live="polite"></div>
         <div id="adminGate" class="lock-panel hidden">
@@ -74,6 +76,8 @@
       const form = document.getElementById("signInForm");
       const button = document.getElementById("signInButton");
       const signOutButton = document.getElementById("signOutButton");
+      const createAccountButton = document.getElementById("createAccountButton");
+      const signupNote = document.getElementById("signupNote");
       const status = document.getElementById("status");
       const gate = document.getElementById("adminGate");
       const ready = document.getElementById("adminReady");
@@ -93,12 +97,16 @@
       async function showUser(user) {
         if (!user) {
           form.classList.remove("hidden");
+          createAccountButton.classList.remove("hidden");
+          signupNote.classList.remove("hidden");
           signOutButton.classList.add("hidden");
           resetPanels();
           subtitle.textContent = "Use your Agrolyst Account credentials. Signing in alone does not grant administrator privileges.";
           return;
         }
         form.classList.add("hidden");
+        createAccountButton.classList.add("hidden");
+        signupNote.classList.add("hidden");
         signOutButton.classList.remove("hidden");
         const { data, error } = await client.auth.getUser();
         if (error || !data?.user) {
@@ -154,6 +162,40 @@
         } finally {
           button.disabled = false;
           button.innerHTML = 'Sign in securely <span aria-hidden="true">→</span>';
+        }
+      });
+      createAccountButton.addEventListener("click", async () => {
+        if (!client) return;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        if (!email || !password) {
+          message("Enter your email and choose a password first.", "error");
+          return;
+        }
+        if (password.length < 8) {
+          message("Use a password with at least 8 characters.", "error");
+          return;
+        }
+        createAccountButton.disabled = true;
+        createAccountButton.textContent = "Creating account…";
+        try {
+          const { data, error } = await client.auth.signUp({
+            email,
+            password,
+            options: { emailRedirectTo: window.location.origin + "/" }
+          });
+          if (error) throw error;
+          if (data.session && data.user) {
+            message("Account created. You are signed in, but administrator access still needs to be granted separately.", "good");
+            await showUser(data.user);
+          } else {
+            message("Account created. Check your email for the confirmation link, then sign in here. Administrator access is not automatic.", "good");
+          }
+        } catch (error) {
+          message(error?.message || "Could not create the account. Please retry.", "error");
+        } finally {
+          createAccountButton.disabled = false;
+          createAccountButton.textContent = "Create authentication account";
         }
       });
       signOutButton.addEventListener("click", async () => {
