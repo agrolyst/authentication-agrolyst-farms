@@ -65,9 +65,9 @@ Confidential client secrets are returned only at creation time so the authorized
 
 The consent page is implemented against Supabase Auth's OAuth server methods, but a real authorization flow will not work until OAuth Server is enabled and a client is registered in the Supabase project.
 
-1. In the Supabase dashboard for project `rcrgooivgssuerrgnuqw`, open **Authentication → OAuth Server** and enable OAuth 2.1 server capabilities.
+1. In the Supabase dashboard for the dedicated authentication project `hbfhrilouvbvcpfqwmta`, open **Authentication → OAuth Server** and enable OAuth 2.1 server capabilities.
 2. Set the **Authorization Path** to `/oauth/consent`.
-3. Set the Site URL to `https://authentication.agrolystfarms.com` so the configured authorization UI resolves to `https://authentication.agrolystfarms.com/oauth/consent`. Before changing the Site URL, review existing email-confirmation, password-reset and other auth redirects; add each required exact callback to **Authentication → URL Configuration → Redirect URLs** so the main website continues to work.
+3. Set the Site URL to `https://authentication.agrolystfarms.com` so the configured authorization UI resolves to `https://authentication.agrolystfarms.com/oauth/consent`. Add the exact authentication-console URLs and any actual app callback URLs to **Authentication → URL Configuration → Redirect URLs**. Keep the main farm website on its original Supabase project and do not change that project's Auth URL settings for this setup.
 4. For a first test, open `https://authentication.agrolystfarms.com/oauth/test-client/` and copy the exact redirect URI shown on that page. In **Authentication → OAuth Apps**, create a **public** test client and register that exact URI. Do not create a confidential client for this static browser test.
 5. Copy the generated public **Client ID** into the test page and click **Start OAuth test**. Use a test seller account. The page initiates Authorization Code + PKCE, verifies the returned `state`, and confirms that approval or denial redirects back. This first-stage test does **not** exchange the authorization code for tokens.
 6. Confirm the consent page shows the requesting app, redirect URI and requested scopes. Test both **Approve** and **Deny**.
