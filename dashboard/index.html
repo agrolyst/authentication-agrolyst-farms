@@ -35,15 +35,23 @@
 </div>
 </section>
 <section class="section" id="oauth">
-<div class="section-head"><div><div class="eyebrow">Identity & integrations</div><h2>OAuth applications</h2><p>Manage registered clients and the applications requesting seller account access.</p></div><span class="tag pending">Backend required</span></div>
+<div class="section-head"><div><div class="eyebrow">Identity & integrations</div><h2>OAuth applications</h2><p>Create client credentials, register exact callback URLs, and manage the apps connecting with Agrolyst.</p></div><button type="button" id="refreshOAuth" class="secondary">↻ Refresh clients</button></div>
 <div class="grid">
 <article class="card oauth-card">
-<div class="oauth-head"><div><h3>Application registry</h3><p>When the secure API is connected, each OAuth client will be listed here with its name, client ID, allowed redirect URLs and active status.</p></div><span class="tag pending">Not live yet</span></div>
-<div class="oauth-status"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><strong>OAuth client management is not connected yet</strong><p>The branded seller login and consent page is being prepared. Before the flow can issue authorization codes, enable OAuth 2.1 under Supabase Authentication → OAuth Server and register each client with its exact redirect URL. Never place client secrets or a Supabase service-role key in browser code.</p></div></div>
-<div class="table-wrap"><table class="oauth-table"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>REDIRECT URI</th><th>STATUS</th></tr></thead><tbody><tr><td colspan="4" class="empty">OAuth server setup and client registration are still required before live applications can appear here.</td></tr></tbody></table></div>
-<div class="mini-grid"><div class="mini"><strong>Client ID</strong><span>Public identifier shown after registration</span></div><div class="mini"><strong>Client secret</strong><span>Server-managed; never shown in full</span></div><div class="mini"><strong>Redirect URLs</strong><span>Registered and exactly validated</span></div></div>
+<div class="oauth-head"><div><h3>Register a new application</h3><p>Use public clients for browser and mobile apps. Choose confidential only for server-side applications that can protect a secret.</p></div><span class="tag">Admin only</span></div>
+<form id="oauthCreateForm" style="margin-top:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+<div><label for="oauthName" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Application name</label><input id="oauthName" name="name" required minlength="2" maxlength="100" placeholder="e.g. Agrolyst Seller Portal" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit"></div>
+<div><label for="oauthType" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Client type</label><select id="oauthType" name="client_type" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit"><option value="public">Public — browser / mobile (recommended for SPA)</option><option value="confidential">Confidential — server-side only</option></select></div>
+<div style="grid-column:1/-1"><label for="oauthRedirects" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Exact redirect URI(s) — one per line</label><textarea id="oauthRedirects" name="redirect_uris" required rows="3" placeholder="https://your-app.example.com/auth/callback" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit;resize:vertical"></textarea><p style="font-size:11px;color:var(--muted);margin-top:6px">HTTPS required in production. No wildcards. Redirect URLs must match exactly, including path and trailing slash.</p></div>
+<div style="grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><button type="submit" id="createOAuthButton">＋ Create OAuth client</button><span id="oauthFormStatus" style="font-size:12px;color:var(--muted)" aria-live="polite"></span></div>
+</form>
+<div id="newClientResult" class="hidden" style="margin-top:18px;padding:16px;border:1px solid #426b48;background:#102d1b;border-radius:13px" aria-live="polite"></div>
+<div class="oauth-status" style="margin-top:18px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><strong>Keep confidential secrets out of browser apps</strong><p>Client IDs are identifiers, not secrets. A confidential client secret is shown only in the create response; store it in your server's secret manager immediately. Never paste it into public website code.</p></div></div>
+<div class="section-head" style="margin-top:28px;margin-bottom:10px"><div><h2 style="font-size:17px">Registered applications</h2><p>Loaded directly from Supabase Auth. Secret values are never listed.</p></div><span id="oauthClientCount" class="tag">Loading…</span></div>
+<div id="oauthListStatus" class="state" style="margin-top:10px" aria-live="polite">Loading registered OAuth clients…</div>
+<div class="table-wrap"><table class="oauth-table" style="min-width:700px"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>TYPE</th><th>REDIRECT URI(S)</th><th>CREATED</th><th>ACTION</th></tr></thead><tbody id="oauthClientsBody"><tr><td colspan="6" class="empty">Loading registered applications…</td></tr></tbody></table></div>
 </article>
-<article class="card" id="security"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Security & access</h3><p>Your admin access is checked against the Supabase <code>admin_users</code> record. OAuth redirect URIs must be registered and exactly matched before authorization redirects are allowed.</p><div class="statline"><span>Session verification</span><span class="tag">Enabled</span></div></article>
+<article class="card" id="security"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Security & access</h3><p>Every client-management request is verified by a protected Supabase Edge Function. It checks the active administrator record on the server before creating or deleting OAuth clients.</p><div class="statline"><span>Server-side authorization</span><span class="tag">Enabled</span></div><div class="statline"><span>Secrets in browser bundle</span><span class="tag">Never</span></div><div class="statline"><span>Redirect URI validation</span><span class="tag">Strict</span></div></article>
 </div>
 </section>
 <footer class="footer"><span>Agrolyst Integrated Farms and Services · Private administration workspace</span><span><a href="https://agrolystfarms.com/" target="_blank" rel="noopener">Main website ↗</a> · <a href="https://agrolystfarms.com/marketplace/" target="_blank" rel="noopener">Seller marketplace ↗</a></span></footer>
@@ -62,7 +70,77 @@ const user=result.data.user;
 const check=await client.from("admin_users").select("display_name,role,is_active").eq("user_id",user.id).maybeSingle();
 if(check.error){fail("Could not verify admin access. Returning to sign in…");return}
 if(!check.data||check.data.is_active!==true){fail("This account is not an active admin. Returning to sign in…");return}
+
 state.classList.add("hidden");content.classList.remove("hidden");
+const apiStatus=document.getElementById("oauthListStatus");
+const clientsBody=document.getElementById("oauthClientsBody");
+const clientCount=document.getElementById("oauthClientCount");
+const formStatus=document.getElementById("oauthFormStatus");
+const createForm=document.getElementById("oauthCreateForm");
+const createButton=document.getElementById("createOAuthButton");
+const resultPanel=document.getElementById("newClientResult");
+function showApiStatus(message,isError=false){apiStatus.textContent=message;apiStatus.className="state"+(isError?" err":"");}
+function cell(text){const el=document.createElement("td");el.textContent=text||"—";return el;}
+async function callOAuthApi(payload){
+ const {data,error}=await client.functions.invoke("oauth-admin",{body:payload});
+ if(error){let message=error.message||"Request failed";try{const body=await error.context?.json?.();if(body?.error)message=body.error;}catch{}throw new Error(data?.error||message);}
+ if(data?.error)throw new Error(data.error);
+ return data;
+}
+async function loadOAuthClients(){
+ showApiStatus("Loading registered OAuth clients…");clientsBody.replaceChildren();
+ try{
+  const data=await callOAuthApi({action:"list"});
+  const clients=Array.isArray(data.clients)?data.clients:[];
+  clientCount.textContent=clients.length+" client"+(clients.length===1?"":"s");
+  if(!clients.length){const row=document.createElement("tr"),empty=cell("No OAuth clients registered yet. Create the first one using the form above.");empty.colSpan=6;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("No registered clients yet. Create your first OAuth client above.");return;}
+  for(const item of clients){
+   const row=document.createElement("tr");
+   row.append(cell(item.name),cell(item.client_id||item.id),cell(item.client_type||"—"));
+   const uris=Array.isArray(item.redirect_uris)?item.redirect_uris.join("\n"):String(item.redirect_uris||"—");
+   const uriCell=cell(uris);uriCell.style.whiteSpace="pre-line";uriCell.style.overflowWrap="anywhere";row.append(uriCell);
+   let created="—";if(item.created_at){const date=new Date(item.created_at);if(!Number.isNaN(date.getTime()))created=date.toLocaleDateString();}
+   row.append(cell(created));
+   const action=cell("");const del=document.createElement("button");del.type="button";del.className="secondary";del.textContent="Delete";del.setAttribute("aria-label","Delete OAuth client "+(item.name||item.client_id||""));
+   del.addEventListener("click",async()=>{
+    const id=item.client_id||item.id;if(!id)return;
+    if(!window.confirm("Delete OAuth client “"+(item.name||id)+"”? Apps using it will no longer be able to start new authorizations."))return;
+    del.disabled=true;del.textContent="Deleting…";
+    try{await callOAuthApi({action:"delete",client_id:id});await loadOAuthClients();showApiStatus("OAuth client deleted.");}
+    catch(e){del.disabled=false;del.textContent="Delete";showApiStatus(e.message,true);}
+   });action.append(del);row.append(action);clientsBody.append(row);
+  }
+  showApiStatus("Client registry loaded securely from Supabase Auth.");
+ }catch(e){clientCount.textContent="Unavailable";const row=document.createElement("tr"),empty=cell("Could not load clients. "+e.message);empty.colSpan=6;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("Could not load OAuth clients: "+e.message,true);}
+}
+createForm.addEventListener("submit",async(event)=>{
+ event.preventDefault();formStatus.textContent="Creating client securely…";createButton.disabled=true;resultPanel.classList.add("hidden");
+ const name=document.getElementById("oauthName").value.trim();
+ const client_type=document.getElementById("oauthType").value;
+ const redirect_uris=document.getElementById("oauthRedirects").value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
+ try{
+  const data=await callOAuthApi({action:"create",name,client_type,redirect_uris});
+  const item=data.client||{};
+  resultPanel.replaceChildren();resultPanel.classList.remove("hidden");
+  const heading=document.createElement("strong");heading.textContent="OAuth client created successfully";resultPanel.append(heading);
+  const desc=document.createElement("p");desc.textContent="Copy the client ID into your connecting app. "+(data.secret_notice||"This public client does not have a client secret.");desc.style.fontSize="12px";resultPanel.append(desc);
+  const addCopyField=(label,value,secret=false)=>{
+   if(!value)return;const wrap=document.createElement("div");wrap.style.marginTop="12px";
+   const l=document.createElement("label");l.textContent=label;l.style.display="block";l.style.fontSize="11px";l.style.marginBottom="5px";wrap.append(l);
+   const input=document.createElement("input");input.readOnly=true;input.value=value;input.autocomplete="off";input.style.width="100%";input.style.padding="10px";input.style.borderRadius="8px";input.style.border="1px solid var(--line)";input.style.background="#071a10";input.style.color="var(--text)";input.style.font="12px monospace";wrap.append(input);
+   const copy=document.createElement("button");copy.type="button";copy.className="secondary";copy.textContent="Copy "+label;copy.style.marginTop="7px";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(value);copy.textContent="Copied";}catch{input.select();document.execCommand("copy");copy.textContent="Copied";}});wrap.append(copy);resultPanel.append(wrap);
+   if(secret){const warn=document.createElement("p");warn.textContent="Secret shown once. Save it in your server-side secret manager now.";warn.style.color="#f5d99a";warn.style.fontSize="11px";resultPanel.append(warn);}
+  };
+  addCopyField("Client ID",item.client_id||item.id);
+  addCopyField("Client secret",item.client_secret||item.client_secret_value,client_type==="confidential");
+  formStatus.textContent="Created.";
+  createForm.reset();document.getElementById("oauthType").value="public";
+  await loadOAuthClients();
+ }catch(e){formStatus.textContent="Creation failed: "+e.message;}
+ finally{createButton.disabled=false;}
+});
+document.getElementById("refreshOAuth").addEventListener("click",loadOAuthClients);
+loadOAuthClients();
 }catch(e){fail("Session verification failed. Returning to sign in…")}
 })();
 </script>
