@@ -7,9 +7,15 @@ Private-facing authentication console and OAuth authorization UI for **https://a
 Deploy the repository root as the static site's publish directory so the root `index.html` serves at the subdomain root. Add `authentication.agrolystfarms.com` as a custom domain in the hosting provider, configure the DNS record the provider specifies, and enable HTTPS.
 
 Pages:
-- Admin console: `/dashboard/`
+- Admin console and OAuth client management: `/dashboard/`
 - OAuth seller sign-in and consent UI: `/oauth/consent/`
 - Temporary OAuth test client: `/oauth/test-client/`
+
+## Dashboard OAuth client management
+
+The admin dashboard calls the `oauth-admin` Supabase Edge Function. The function requires a valid signed-in user and checks `public.admin_users` for an active `admin` or `super_admin` record before each operation. It supports listing registered clients, creating public or confidential clients, and deleting clients. Redirect URIs are validated server-side (HTTPS, with localhost HTTP permitted for development); wildcard redirect URIs are not accepted. The function runs with JWT verification enabled. No Supabase service-role/secret key is included in browser code.
+
+Confidential client secrets are returned only at creation time so the authorized administrator can store them in a server-side secret manager. Do not put them into browser applications. Public client IDs may be used in browser/mobile apps.
 
 ## OAuth 2.1 setup — required before real connections work
 
