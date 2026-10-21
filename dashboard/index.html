@@ -103,31 +103,50 @@ async function callOAuthApi(payload){
  return data;
 }
 async function loadOAuthClients(){
- showApiStatus("Loading registered OAuth clients…");clientsBody.replaceChildren();
+ showApiStatus("Loading registered OAuth clients and saved branding…");clientsBody.replaceChildren();
  try{
   const data=await callOAuthApi({action:"list"});
   const clients=Array.isArray(data.clients)?data.clients:[];
+  const {data:brandRows,error:brandError}=await client.from("oauth_client_branding").select("client_id,application_name,logo_url,website_url,verification_status,updated_at");
+  if(brandError) throw new Error("Clients loaded, but saved branding could not be read: "+brandError.message);
+  const brandMap=new Map((brandRows||[]).map(b=>[b.client_id,b]));
   clientCount.textContent=clients.length+" client"+(clients.length===1?"":"s");
   if(!clients.length){const row=document.createElement("tr"),empty=cell("No OAuth clients registered yet. Create the first one using the form above.");empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("No registered clients yet. Create your first OAuth client above.");return;}
   for(const item of clients){
+   const id=item.client_id||item.id;
+   const saved=brandMap.get(id);
+   const shownName=saved?.application_name||item.name||"OAuth application";
    const row=document.createElement("tr");
-   row.append(cell(item.name),cell(item.client_id||item.id),cell(item.client_type||"—"));
+   const nameCell=cell("");
+   const nameWrap=document.createElement("div");nameWrap.style.display="flex";nameWrap.style.alignItems="center";nameWrap.style.gap="9px";
+   if(saved?.logo_url){const img=document.createElement("img");img.src=saved.logo_url;img.alt="";img.loading="lazy";img.style.width="36px";img.style.height="36px";img.style.objectFit="contain";img.style.borderRadius="8px";img.style.border="1px solid var(--line)";img.style.background="#fff";nameWrap.append(img);}
+   const nameText=document.createElement("span");nameText.textContent=shownName;nameText.style.fontWeight="700";nameWrap.append(nameText);
+   if(saved?.verification_status==="verified"){const verified=document.createElement("span");verified.className="tag";verified.textContent="Verified";nameWrap.append(verified);}
+   nameCell.append(nameWrap);row.append(nameCell,cell(id),cell(item.client_type||"—"));
    const uris=Array.isArray(item.redirect_uris)?item.redirect_uris.join("\n"):String(item.redirect_uris||"—");
    const uriCell=cell(uris);uriCell.style.whiteSpace="pre-line";uriCell.style.overflowWrap="anywhere";row.append(uriCell);
    let created="—";if(item.created_at){const date=new Date(item.created_at);if(!Number.isNaN(date.getTime()))created=date.toLocaleDateString();}
    row.append(cell(created));
-   const branding=cell("");const brandBtn=document.createElement("button");brandBtn.type="button";brandBtn.className="secondary";brandBtn.textContent="Upload logo";brandBtn.addEventListener("click",()=>{brandingTarget={client_id:item.client_id||item.id,name:item.name||"OAuth application"};existingLogoInput.click();});branding.append(brandBtn);row.append(branding);
-   const action=cell("");const del=document.createElement("button");del.type="button";del.className="secondary";del.textContent="Delete";del.setAttribute("aria-label","Delete OAuth client "+(item.name||item.client_id||""));
+   const branding=cell("");branding.style.minWidth="180px";
+   const editName=document.createElement("input");editName.type="text";editName.value=saved?.application_name||item.name||"";editName.maxLength=100;editName.placeholder="Application display name";editName.style.width="100%";editName.style.padding="8px";editName.style.marginBottom="7px";editName.style.borderRadius="8px";editName.style.border="1px solid var(--line)";editName.style.background="#071a10";editName.style.color="var(--text)";editName.style.font="inherit";branding.append(editName);
+   const saveName=document.createElement("button");saveName.type="button";saveName.className="secondary";saveName.textContent="Save name";saveName.addEventListener("click",async()=>{
+    const newName=editName.value.trim();if(newName.length<2){showApiStatus("Application name must contain at least 2 characters.",true);return;}
+    saveName.disabled=true;saveName.textContent="Saving…";
+    try{await callOAuthApi({action:"branding",client_id:id,application_name:newName,website_url:saved?.website_url||null,logo_url:saved?.logo_url||null});await loadOAuthClients();showApiStatus("Saved display name for "+newName+".");}
+    catch(e){saveName.disabled=false;saveName.textContent="Save name";showApiStatus("Could not save application name: "+e.message,true);}
+   });branding.append(saveName);
+   const brandBtn=document.createElement("button");brandBtn.type="button";brandBtn.className="secondary";brandBtn.textContent=saved?.logo_url?"Replace logo":"Upload logo";brandBtn.style.marginTop="7px";brandBtn.addEventListener("click",()=>{brandingTarget={client_id:id,name:editName.value.trim()||shownName,website_url:saved?.website_url||null};existingLogoInput.click();});branding.append(brandBtn);row.append(branding);
+   const action=cell("");const del=document.createElement("button");del.type="button";del.className="secondary";del.textContent="Delete";del.setAttribute("aria-label","Delete OAuth client "+shownName);
    del.addEventListener("click",async()=>{
-    const id=item.client_id||item.id;if(!id)return;
-    if(!window.confirm("Delete OAuth client “"+(item.name||id)+"”? Apps using it will no longer be able to start new authorizations."))return;
+    if(!id)return;
+    if(!window.confirm("Delete OAuth client “"+shownName+"”? Apps using it will no longer be able to start new authorizations."))return;
     del.disabled=true;del.textContent="Deleting…";
     try{await callOAuthApi({action:"delete",client_id:id});await loadOAuthClients();showApiStatus("OAuth client deleted.");}
     catch(e){del.disabled=false;del.textContent="Delete";showApiStatus(e.message,true);}
    });action.append(del);row.append(action);clientsBody.append(row);
   }
-  showApiStatus("Client registry loaded securely from Supabase Auth.");
- }catch(e){clientCount.textContent="Unavailable";const row=document.createElement("tr"),empty=cell("Could not load clients. "+e.message);empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("Could not load OAuth clients: "+e.message,true);}
+  showApiStatus("Client registry loaded. Saved application names and logos are shown from Supabase.");
+ }catch(e){clientCount.textContent="Unavailable";const row=document.createElement("tr"),empty=cell("Could not load clients or saved branding. "+e.message);empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("Could not load OAuth clients: "+e.message,true);}
 }
 existingLogoInput.addEventListener("change",async()=>{
  const file=existingLogoInput.files?.[0],target=brandingTarget;
@@ -136,7 +155,7 @@ existingLogoInput.addEventListener("change",async()=>{
  showApiStatus("Uploading logo for "+target.name+"…");
  try{
   const logo_url=await uploadLogo(file,target.client_id);
-  await callOAuthApi({action:"branding",client_id:target.client_id,application_name:target.name,logo_url});
+  await callOAuthApi({action:"branding",client_id:target.client_id,application_name:target.name,website_url:target.website_url||null,logo_url});
   await loadOAuthClients();
   showApiStatus("Logo saved for "+target.name+". It will appear on future consent screens.");
  }catch(e){showApiStatus("Logo upload failed: "+e.message,true);}
