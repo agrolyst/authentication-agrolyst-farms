@@ -9,6 +9,81 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
 <style>
 :root{color-scheme:dark;--bg:#07170f;--surface:#0d2518;--surface2:#123321;--line:#244a32;--green:#a9efad;--lime:#d8f7b3;--text:#f3fbf4;--muted:#a7c1ae;--amber:#f5d99a}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#1d5130 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}a{color:inherit}.site-header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:22px;padding:13px max(18px,calc((100vw - 1220px)/2));border-bottom:1px solid #2b4a35;background:rgba(7,23,15,.92);backdrop-filter:blur(18px)}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;min-width:max-content}.brand img{width:42px;height:42px;border-radius:13px;object-fit:cover}.brand-name{font-weight:850;letter-spacing:.12em;font-size:14px;line-height:1.2}.brand-name small{display:block;font-size:9px;letter-spacing:.19em;color:var(--muted);font-weight:700;margin-top:5px}.nav{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}.nav a{font-size:12px;text-decoration:none;color:var(--muted);padding:9px 11px;border-radius:9px;transition:.2s}.nav a:hover,.nav a:focus{color:var(--text);background:#173b25}.header-actions{display:flex;align-items:center;gap:9px}.admin-chip{font-size:11px;border:1px solid #315b3b;color:var(--green);padding:7px 10px;border-radius:99px;white-space:nowrap}button,.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border:1px solid #3a6244;background:#183b25;color:var(--text);border-radius:10px;text-decoration:none;font:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}button:hover,.button:hover{transform:translateY(-1px);border-color:var(--green)}button.secondary,.button.secondary{background:transparent;border-color:var(--line);color:var(--muted)}.wrap{max-width:1220px;margin:auto;padding:42px 22px 65px}.state{padding:15px 18px;border:1px solid var(--line);border-radius:13px;color:var(--muted);background:#0c2417}.state.err{color:#ffc4b8;border-color:#8a473a}.hidden{display:none!important}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:4px 0 32px}.eyebrow{color:var(--green);font-size:10px;font-weight:850;letter-spacing:.19em;text-transform:uppercase}.hero h1{font-size:clamp(34px,5vw,57px);letter-spacing:-.055em;line-height:1.05;margin:12px 0}.hero p{color:var(--muted);max-width:640px;margin:0}.hero-actions{display:flex;gap:9px;flex-wrap:wrap}.section{margin-top:38px;animation:rise .45s ease both}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin-bottom:16px}.section-head h2{font-size:22px;letter-spacing:-.03em;margin:5px 0 0}.section-head p{color:var(--muted);font-size:13px;margin:4px 0 0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{border:1px solid var(--line);background:linear-gradient(145deg,#123522,#0b2115);border-radius:18px;padding:21px;min-width:0}.card h3{font-size:16px;margin:0 0 7px}.card p{font-size:12px;color:var(--muted);line-height:1.75;margin:0}.iconbox{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#20462c;color:var(--green);margin-bottom:17px}.iconbox svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.statline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid #315b3b;background:#153522;color:var(--green);border-radius:99px;padding:5px 9px;font-size:10px;font-weight:750;white-space:nowrap}.tag.pending{color:var(--amber);border-color:#6a5931;background:#332b18}.seller-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:16px}.seller-preview{overflow:hidden;border:1px solid #2b5136;border-radius:18px;background:#102c1c}.preview-top{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted)}.preview-hero{padding:28px 22px;background:linear-gradient(125deg,#1b4b2b,#0e2b1a 70%);min-height:215px;position:relative;overflow:hidden}.preview-hero:after{content:"";position:absolute;width:170px;height:170px;border:1px solid #8fe09a33;border-radius:50%;right:-35px;top:18px;box-shadow:0 0 0 22px #8fe09a0c,0 0 0 45px #8fe09a08}.preview-hero h3{font-size:clamp(24px,3vw,36px);letter-spacing:-.04em;line-height:1.12;max-width:380px;margin:12px 0}.preview-hero p{font-size:12px;color:#c4dbc9;max-width:380px;margin:0 0 17px}.preview-bottom{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.preview-bottom strong{font-size:12px}.preview-bottom span{font-size:11px;color:var(--muted)}.feature-list{display:grid;gap:10px}.feature{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#0d2518}.feature svg{width:18px;height:18px;flex:none;color:var(--green);stroke:currentColor;fill:none;stroke-width:1.8}.feature strong{display:block;font-size:12px;margin-bottom:3px}.feature span{display:block;color:var(--muted);font-size:11px;line-height:1.6}.oauth-card{grid-column:span 2}.oauth-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}.oauth-head h3{font-size:19px;margin:0 0 6px}.oauth-head p{color:var(--muted);font-size:12px;margin:0;max-width:620px}.oauth-status{display:flex;gap:10px;align-items:flex-start;padding:15px;margin-top:18px;border:1px solid #66532d;background:#2b2518;border-radius:13px}.oauth-status svg{width:20px;height:20px;flex:none;stroke:var(--amber);fill:none;stroke-width:1.8}.oauth-status strong{font-size:12px;display:block;color:#f6dfaa}.oauth-status p{font-size:11px;color:#d3c7a6;margin:4px 0 0;line-height:1.65}.table-wrap{overflow-x:auto;margin-top:18px;border:1px solid var(--line);border-radius:12px}.oauth-table{border-collapse:collapse;width:100%;min-width:520px;font-size:11px}.oauth-table th,.oauth-table td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line)}.oauth-table th{color:var(--muted);font-weight:700;background:#0b2115}.oauth-table td{color:#dcece0}.oauth-table tr:last-child td{border-bottom:0}.empty{text-align:center!important;padding:25px!important;color:var(--muted)!important}.mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.mini{padding:13px;border:1px solid var(--line);border-radius:12px}.mini strong{display:block;font-size:12px;margin-bottom:4px}.mini span{font-size:10px;color:var(--muted)}.footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#7e9a85;font-size:10px}.footer a{color:var(--green);text-decoration:none}@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}@media(max-width:920px){.site-header{flex-wrap:wrap}.nav{order:3;width:100%;justify-content:flex-start}.seller-layout{grid-template-columns:1fr}.oauth-card{grid-column:span 1}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){.site-header{padding:12px 14px}.brand img{width:36px;height:36px}.admin-chip{display:none}.nav{gap:2px}.nav a{padding:8px;font-size:11px}.wrap{padding:28px 15px 45px}.grid,.mini-grid{grid-template-columns:1fr}.hero h1{font-size:38px}.hero-actions{width:100%}.hero-actions>*{flex:1}.card{padding:18px}.preview-hero{padding:23px 18px}.oauth-head{display:block}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Professional identity-console dashboard */
+:root{--bg:#f4f7f4;--surface:#fff;--surface2:#f8fbf8;--line:#e0e8e1;--green:#176c3c;--lime:#dff5e4;--text:#17251b;--muted:#6d7d71;--amber:#9c6a13;color-scheme:light}
+body{background:#f4f7f4;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.site-header{background:rgba(255,255,255,.92);border-bottom:1px solid #e0e8e1;box-shadow:0 3px 14px #12291a08}
+.brand img{border:1px solid #e2e9e2;background:#fff}.brand-name{color:#173b26}.brand-name small{color:#718377}
+.nav a{color:#617367}.nav a:hover,.nav a:focus{background:#edf6ef;color:#176c3c}
+.admin-chip{border-color:#d5e9d8;background:#f1faf2;color:#176c3c}
+button,.button{border-color:#cfe0d1;background:#176c3c;color:#fff;border-radius:11px;box-shadow:none}
+button:hover,.button:hover{border-color:#176c3c;background:#11552f}
+button.secondary,.button.secondary{background:#fff;border-color:#d9e4da;color:#415a48}
+.wrap{max-width:1320px;padding-top:36px}
+.state{border-color:#dce7dd;background:#fff;color:#647568;box-shadow:0 4px 18px #12291a05}
+.state.err{background:#fff8f6;color:#9b3829;border-color:#f1c9c1}
+.hero{align-items:center;margin:5px 0 25px;gap:26px}
+.hero h1{font-size:clamp(32px,4.2vw,48px);letter-spacing:-.05em;line-height:1.08;margin:11px 0}
+.hero p{color:#697a6d;font-size:14px;max-width:650px}
+.eyebrow{color:#176c3c;letter-spacing:.14em}
+.live-dot,.workspace-status i,.metric-foot i{width:7px;height:7px;display:inline-block;border-radius:50%;background:#2fa461;box-shadow:0 0 0 4px #2fa46117}
+.profile-card{display:flex;align-items:center;gap:13px;min-width:285px;max-width:390px;padding:15px 17px;background:#fff;border:1px solid #e0e8e1;border-radius:17px;box-shadow:0 10px 28px #12291a07}
+.profile-avatar{width:45px;height:45px;display:grid;place-items:center;border-radius:14px;background:#e7f5e9;color:#176c3c;font-size:18px;font-weight:850;flex:none}
+.profile-details{display:grid;gap:3px;min-width:0;flex:1}
+.profile-label{font-size:9px;font-weight:850;letter-spacing:.1em;color:#718377}
+.profile-details strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-details>span:not(.profile-label){font-size:11px;color:#718377;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-role{font-size:10px;color:#176c3c;font-weight:800}
+.session-indicator{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-size:10px;color:#176c3c;background:#eef8ef;padding:5px 8px;border-radius:99px;white-space:nowrap}
+.session-indicator i{width:5px;height:5px;border-radius:50%;background:#2fa461}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.metric-card{background:#fff;border:1px solid #e0e8e1;border-radius:16px;padding:18px 19px;min-width:0;box-shadow:0 6px 20px #12291a04}
+.metric-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#687a6d;font-size:12px;font-weight:650}
+.metric-icon{width:33px;height:33px;display:grid;place-items:center;border-radius:11px;background:#edf7ef;color:#176c3c;font-size:17px}
+.metric-card>strong{display:block;font-size:32px;line-height:1.15;letter-spacing:-.05em;margin:16px 0 9px;color:#172d1e}
+.metric-foot{display:flex;align-items:center;gap:7px;font-size:10px;color:#77867b}
+.metric-foot i{width:6px;height:6px;box-shadow:none}
+.section{margin-top:32px;animation:rise .35s ease both}
+.section-head{margin-bottom:14px}
+.section-head h2{font-size:20px;color:#1b3021}
+.section-head p{color:#738176}
+.workspace-status{display:inline-flex;align-items:center;gap:8px;border:1px solid #dce8de;border-radius:99px;background:#fff;padding:8px 11px;color:#526a58;font-size:11px}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.quick-card{display:flex;align-items:center;gap:13px;text-decoration:none;background:#fff;border:1px solid #e0e8e1;border-radius:15px;padding:17px 18px;transition:border-color .18s,transform .18s,box-shadow .18s;min-width:0}
+.quick-card:hover{border-color:#b9d9c0;transform:translateY(-2px);box-shadow:0 9px 22px #173c240b}
+.quick-icon{width:39px;height:39px;display:grid;place-items:center;flex:none;border-radius:12px;background:#edf7ef;color:#176c3c;font-size:19px;font-weight:700}
+.quick-copy{display:grid;gap:4px;min-width:0;flex:1}
+.quick-copy strong{font-size:12px;color:#203a28}
+.quick-copy small{font-size:11px;line-height:1.55;color:#748176}
+.quick-arrow{color:#6c8a73;font-size:17px}
+.card{border-color:#e0e8e1;background:#fff;box-shadow:0 7px 24px #12291a04;border-radius:16px}
+.card h3{color:#1e3525}.card p{color:#728075}
+.iconbox{background:#edf7ef;color:#176c3c}
+.statline{border-color:#e7eee8;color:#748176}
+.tag{border-color:#d7e9da;background:#f0f8f1;color:#176c3c}
+.tag.pending{color:#8b6319;border-color:#f0dfb4;background:#fff8e9}
+.seller-preview,.preview-hero{background:#f3faf4;border-color:#dce8de}
+.preview-hero{background:linear-gradient(125deg,#e1f4e5,#f4faf4 70%)}
+.preview-hero h3{color:#183b26}.preview-hero p{color:#607565}
+.preview-hero:after{border-color:#176c3c22;box-shadow:0 0 0 22px #176c3c08,0 0 0 45px #176c3c04}
+.preview-top{border-color:#e0e8e1;color:#708075}
+.preview-bottom{border-color:#e0e8e1}.preview-bottom strong{color:#243d2a}.preview-bottom span{color:#748176}
+.feature{border-color:#e0e8e1;background:#fff}.feature strong{color:#203a28}.feature span{color:#748176}
+.oauth-status{border-color:#efdfb8;background:#fff9ec}.oauth-status strong{color:#805a14}.oauth-status p{color:#796b4d}
+.table-wrap{border-color:#e0e8e1;background:#fff}
+.oauth-table th,.oauth-table td{border-bottom-color:#e7eee8;color:#334c3a}
+.oauth-table th{background:#f5f9f5;color:#6e7e72}
+.oauth-table td input{background:#fff!important;color:#243d2a!important;border-color:#dce7dd!important}
+.oauth-table button{font-size:11px;padding:8px 10px}
+.oauth-table button.secondary{background:#fff;color:#415a48}
+#oauthCreateForm input,#oauthCreateForm select,#oauthCreateForm textarea{background:#fbfdfb!important;color:#1e3525!important;border-color:#dce7dd!important}
+#oauthCreateForm input:focus,#oauthCreateForm select:focus,#oauthCreateForm textarea:focus{outline:2px solid #c5e5cb;outline-offset:1px}
+#newClientResult{background:#f0f8f1!important;border-color:#cfe5d3!important}
+.footer{border-color:#e0e8e1;color:#829087}.footer a{color:#176c3c}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start}.profile-card{max-width:100%}}
+@media(max-width:580px){.wrap{padding:25px 14px 40px}.hero{display:block}.profile-card{margin-top:18px;min-width:0}.metrics{gap:9px}.metric-card{padding:14px}.metric-card>strong{font-size:27px}.quick-grid{grid-template-columns:1fr}.workspace-status{margin-top:4px}.section-head h2{font-size:19px}}
+
 </style>
 </head>
 <body>
@@ -20,18 +95,23 @@
 <main class="wrap" id="top">
 <div id="state" class="state">Verifying your administrator session securely…</div>
 <div id="content" class="hidden">
-<section class="hero" id="overview"><div><div class="eyebrow">Agrolyst Farms · Administration</div><h1>Build your digital<br>farm experience.</h1><p>Manage the seller-facing experience and review the OAuth application area from one workspace. This console is private to verified administrators.</p></div><div class="hero-actions"><a class="button" href="#seller-page">Customise seller page ↓</a><a class="button secondary" href="#oauth">View OAuth setup</a></div></section>
-<div class="grid">
-<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><h3>Control centre</h3><p>A central place for seller experience, application access and administration tools.</p><div class="statline"><span>Workspace</span><span class="tag">Available</span></div></article>
-<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5M9 21v-7h6v7"/></svg></div><h3>Agrolyst Sellers</h3><p>Preview the seller page design and open the public marketplace to check the current experience.</p><div class="statline"><span>Public site</span><a href="https://agrolystfarms.com/marketplace/" style="color:var(--green);text-decoration:none">Open marketplace ↗</a></div></article>
-<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>OAuth readiness</h3><p>The OAuth area is designed into this dashboard. Live client creation awaits its protected backend.</p><div class="statline"><span>Registration API</span><span class="tag pending">Not connected</span></div></article>
-</div>
-<section class="section" id="connect-flow">
-<div class="section-head"><div><div class="eyebrow">Seller account connection</div><h2>How sellers connect with Agrolyst</h2><p>The OAuth consent screen lets sellers sign in, review requested permissions, and approve or deny access.</p></div><a class="button secondary" href="/oauth/consent/">Preview connection screen ↗</a></div>
-<div class="grid">
-<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/></svg></div><h3>1. Connect</h3><p>The partner app redirects a seller to the Agrolyst authorization endpoint with its client ID, redirect URL, and requested scopes.</p><div class="statline"><span>Start point</span><span class="tag">OAuth request</span></div></article>
-<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg></div><h3>2. Sign in & review</h3><p>The seller signs in with their own Agrolyst account. The consent page displays the application identity, redirect URL, and requested permissions.</p><div class="statline"><span>Seller control</span><span class="tag">Explicit consent</span></div></article>
-<article class="card"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></div><h3>3. Approve or deny</h3><p>Supabase Auth completes the OAuth authorization-code flow and returns the seller to the registered callback URL if they approve.</p><div class="statline"><span>Token exchange</span><span class="tag pending">Enable OAuth server</span></div></article>
+<section class="hero" id="overview">
+<div class="hero-copy"><div class="eyebrow"><span class="live-dot"></span> Agrolyst Identity · Admin workspace</div><h1>Good to have you<br><span>back in control.</span></h1><p>Manage connected applications, application branding and secure seller sign-in from your dedicated Agrolyst Authentication workspace.</p></div>
+<div class="profile-card"><div class="profile-avatar" id="adminAvatar">A</div><div class="profile-details"><span class="profile-label">SIGNED-IN ADMINISTRATOR</span><strong id="adminName">Administrator</strong><span id="adminEmail">Secure session active</span><div class="profile-role" id="adminRole">Administrator</div></div><span class="session-indicator" title="Authenticated session"><i></i> Secure</span></div>
+</section>
+<section class="metrics" aria-label="Authentication overview">
+<article class="metric-card"><div class="metric-top"><span>Registered applications</span><span class="metric-icon">▦</span></div><strong id="metricTotalClients">—</strong><span class="metric-foot"><i></i> OAuth client registry</span></article>
+<article class="metric-card"><div class="metric-top"><span>Public clients</span><span class="metric-icon">⌘</span></div><strong id="metricPublicClients">—</strong><span class="metric-foot">Browser and mobile apps</span></article>
+<article class="metric-card"><div class="metric-top"><span>Confidential clients</span><span class="metric-icon">♙</span></div><strong id="metricConfidentialClients">—</strong><span class="metric-foot">Server-side integrations</span></article>
+<article class="metric-card"><div class="metric-top"><span>Branded applications</span><span class="metric-icon">✧</span></div><strong id="metricBrandedClients">—</strong><span class="metric-foot">Custom name or logo saved</span></article>
+</section>
+<section class="section overview-lower">
+<div class="section-head"><div><div class="eyebrow">Workspace shortcuts</div><h2>Manage your identity platform</h2><p>Jump straight to the tools you use most.</p></div><span class="workspace-status"><i></i> Authentication project active</span></div>
+<div class="quick-grid">
+<a class="quick-card" href="#oauth"><span class="quick-icon">＋</span><span class="quick-copy"><strong>Register an application</strong><small>Create a public or confidential OAuth client and register exact callback URLs.</small></span><span class="quick-arrow">↗</span></a>
+<a class="quick-card" href="#registered-applications"><span class="quick-icon">▤</span><span class="quick-copy"><strong>Application registry</strong><small>Review client IDs, redirect URIs and application branding.</small></span><span class="quick-arrow">↗</span></a>
+<a class="quick-card" href="/oauth/consent/"><span class="quick-icon">◇</span><span class="quick-copy"><strong>Preview consent screen</strong><small>See the sign-in and permission approval experience sellers use.</small></span><span class="quick-arrow">↗</span></a>
+<a class="quick-card" href="https://authentication.agrolystfarms.com/oauth/test-client/" target="_blank" rel="noopener"><span class="quick-icon">↗</span><span class="quick-copy"><strong>Run OAuth test</strong><small>Open the test client to verify an application's authorization flow.</small></span><span class="quick-arrow">↗</span></a>
 </div>
 </section>
 <section class="section" id="oauth">
@@ -49,7 +129,7 @@
 </form>
 <div id="newClientResult" class="hidden" style="margin-top:18px;padding:16px;border:1px solid #426b48;background:#102d1b;border-radius:13px" aria-live="polite"></div>
 <div class="oauth-status" style="margin-top:18px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><strong>Keep confidential secrets out of browser apps</strong><p>Client IDs are identifiers, not secrets. A confidential client secret is shown only in the create response; store it in your server's secret manager immediately. Never paste it into public website code.</p></div></div>
-<div class="section-head" style="margin-top:28px;margin-bottom:10px"><div><h2 style="font-size:17px">Registered applications</h2><p>Loaded directly from Supabase Auth. Secret values are never listed.</p></div><span id="oauthClientCount" class="tag">Loading…</span></div>
+<div class="section-head" id="registered-applications" style="margin-top:28px;margin-bottom:10px"><div><h2 style="font-size:17px">Registered applications</h2><p>Loaded directly from Supabase Auth. Secret values are never listed.</p></div><span id="oauthClientCount" class="tag">Loading…</span></div>
 <div id="oauthListStatus" class="state" style="margin-top:10px" aria-live="polite">Loading registered OAuth clients…</div>
 <input id="existingLogoInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden" aria-label="Choose a logo for an existing OAuth application">
 <div class="table-wrap"><table class="oauth-table" style="min-width:760px"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>TYPE</th><th>REDIRECT URI(S)</th><th>CREATED</th><th>BRANDING</th><th>ACTION</th></tr></thead><tbody id="oauthClientsBody"><tr><td colspan="7" class="empty">Loading registered applications…</td></tr></tbody></table></div>
@@ -75,6 +155,12 @@ if(check.error){fail("Could not verify admin access. Returning to sign in…");r
 if(!check.data||check.data.is_active!==true){fail("This account is not an active admin. Returning to sign in…");return}
 
 state.classList.add("hidden");content.classList.remove("hidden");
+const adminName=(check.data.display_name||user.user_metadata?.full_name||user.email?.split("@")[0]||"Administrator").trim();
+document.getElementById("adminName").textContent=adminName;
+document.getElementById("adminEmail").textContent=user.email||"Authenticated account";
+document.getElementById("adminRole").textContent=String(check.data.role||"admin").replace(/_/g," ").replace(/\b\w/g,s=>s.toUpperCase());
+document.getElementById("adminAvatar").textContent=(adminName.match(/[A-Za-z0-9]/)?.[0]||"A").toUpperCase();
+
 const apiStatus=document.getElementById("oauthListStatus");
 const clientsBody=document.getElementById("oauthClientsBody");
 const clientCount=document.getElementById("oauthClientCount");
@@ -111,6 +197,11 @@ async function loadOAuthClients(){
   if(brandError) throw new Error("Clients loaded, but saved branding could not be read: "+brandError.message);
   const brandMap=new Map((brandRows||[]).map(b=>[b.client_id,b]));
   clientCount.textContent=clients.length+" client"+(clients.length===1?"":"s");
+  document.getElementById("metricTotalClients").textContent=String(clients.length);
+  document.getElementById("metricPublicClients").textContent=String(clients.filter(x=>(x.client_type||x.type||"").toLowerCase()==="public").length);
+  document.getElementById("metricConfidentialClients").textContent=String(clients.filter(x=>(x.client_type||x.type||"").toLowerCase()==="confidential").length);
+  document.getElementById("metricBrandedClients").textContent=String((brandRows||[]).filter(b=>b.application_name||b.logo_url).length);
+
   if(!clients.length){const row=document.createElement("tr"),empty=cell("No OAuth clients registered yet. Create the first one using the form above.");empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("No registered clients yet. Create your first OAuth client above.");return;}
   for(const item of clients){
    const id=item.client_id||item.id;
