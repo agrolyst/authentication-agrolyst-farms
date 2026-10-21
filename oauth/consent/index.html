@@ -19,7 +19,7 @@
 <main class="main">
 <section class="intro"><div class="eyebrow">Agrolyst identity · OAuth authorization</div><h1>Connect your account.<br><span>Stay in control.</span></h1><p>Sign in with your Agrolyst account to review which application is requesting access. You decide whether to approve or deny each connection.</p><div class="trust"><div class="trust-item"><span class="check">✓</span><span>Your password stays with Agrolyst authentication.</span></div><div class="trust-item"><span class="check">✓</span><span>Requested permissions are shown before approval.</span></div><div class="trust-item"><span class="check">✓</span><span>You can deny a request you do not recognise.</span></div></div></section>
 <section class="card" aria-live="polite">
-<div class="app-icon" aria-hidden="true">↔</div>
+<div class="app-icon" id="appIcon" aria-hidden="true">↔</div>
 <div id="eyebrow" class="eyebrow">Verify the connection</div>
 <h2 id="heading">Sign in to Agrolyst</h2>
 <p id="sub" class="sub">Use your existing Agrolyst account to continue. This is not your administrator dashboard login requirement; ordinary seller accounts can authenticate here.</p>
@@ -70,7 +70,17 @@ loadedDetails=data;
 document.getElementById("heading").textContent="Review connection";
 document.getElementById("sub").textContent="Confirm that you recognise this application before granting access to your Agrolyst account.";
 document.getElementById("eyebrow").textContent="Permission review";
-document.getElementById("clientName").textContent=data.client?.name||"Unverified application";
+const clientId=data.client?.client_id||data.client?.id||data.client_id||data.clientId||"";
+let branding=null;
+if(clientId){
+ const lookup=await client.from("oauth_client_branding").select("application_name,logo_url,website_url,verification_status").eq("client_id",clientId).maybeSingle();
+ if(!lookup.error) branding=lookup.data;
+}
+document.getElementById("clientName").textContent=branding?.application_name||data.client?.name||"Application requesting access";
+if(branding?.logo_url){
+ const icon=document.getElementById("appIcon");icon.replaceChildren();
+ const img=document.createElement("img");img.src=branding.logo_url;img.alt="";img.style.width="100%";img.style.height="100%";img.style.objectFit="contain";img.style.borderRadius="12px";icon.append(img);
+}
 document.getElementById("redirectUri").textContent=data.redirect_uri||"Not provided";
 const holder=document.getElementById("scopes");holder.replaceChildren();
 const scopes=String(data.scope||"").split(/\s+/).filter(Boolean);
