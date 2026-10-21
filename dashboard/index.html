@@ -43,13 +43,16 @@
 <div><label for="oauthName" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Application name</label><input id="oauthName" name="name" required minlength="2" maxlength="100" placeholder="e.g. Agrolyst Seller Portal" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit"></div>
 <div><label for="oauthType" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Client type</label><select id="oauthType" name="client_type" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit"><option value="public">Public — browser / mobile (recommended for SPA)</option><option value="confidential">Confidential — server-side only</option></select></div>
 <div style="grid-column:1/-1"><label for="oauthRedirects" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Exact redirect URI(s) — one per line</label><textarea id="oauthRedirects" name="redirect_uris" required rows="3" placeholder="https://your-app.example.com/auth/callback" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit;resize:vertical"></textarea><p style="font-size:11px;color:var(--muted);margin-top:6px">HTTPS required in production. No wildcards. Redirect URLs must match exactly, including path and trailing slash.</p></div>
+<div><label for="oauthWebsite" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Application website (optional)</label><input id="oauthWebsite" type="url" placeholder="https://your-app.example.com" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit"></div>
+<div><label for="oauthLogo" style="display:block;font-size:12px;color:var(--muted);margin-bottom:7px">Application logo (optional)</label><input id="oauthLogo" type="file" accept="image/png,image/jpeg,image/webp" style="width:100%;padding:9px;border-radius:10px;border:1px solid var(--line);background:#071a10;color:var(--text);font:inherit"><p style="font-size:11px;color:var(--muted);margin-top:6px">PNG, JPG or WebP · max 2 MB. You can also add a logo to existing clients below.</p></div>
 <div style="grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><button type="submit" id="createOAuthButton">＋ Create OAuth client</button><span id="oauthFormStatus" style="font-size:12px;color:var(--muted)" aria-live="polite"></span></div>
 </form>
 <div id="newClientResult" class="hidden" style="margin-top:18px;padding:16px;border:1px solid #426b48;background:#102d1b;border-radius:13px" aria-live="polite"></div>
 <div class="oauth-status" style="margin-top:18px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><strong>Keep confidential secrets out of browser apps</strong><p>Client IDs are identifiers, not secrets. A confidential client secret is shown only in the create response; store it in your server's secret manager immediately. Never paste it into public website code.</p></div></div>
 <div class="section-head" style="margin-top:28px;margin-bottom:10px"><div><h2 style="font-size:17px">Registered applications</h2><p>Loaded directly from Supabase Auth. Secret values are never listed.</p></div><span id="oauthClientCount" class="tag">Loading…</span></div>
 <div id="oauthListStatus" class="state" style="margin-top:10px" aria-live="polite">Loading registered OAuth clients…</div>
-<div class="table-wrap"><table class="oauth-table" style="min-width:700px"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>TYPE</th><th>REDIRECT URI(S)</th><th>CREATED</th><th>ACTION</th></tr></thead><tbody id="oauthClientsBody"><tr><td colspan="6" class="empty">Loading registered applications…</td></tr></tbody></table></div>
+<input id="existingLogoInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden" aria-label="Choose a logo for an existing OAuth application">
+<div class="table-wrap"><table class="oauth-table" style="min-width:760px"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>TYPE</th><th>REDIRECT URI(S)</th><th>CREATED</th><th>BRANDING</th><th>ACTION</th></tr></thead><tbody id="oauthClientsBody"><tr><td colspan="7" class="empty">Loading registered applications…</td></tr></tbody></table></div>
 </article>
 <article class="card" id="security"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Security & access</h3><p>Every client-management request is verified by a protected Supabase Edge Function. It checks the active administrator record on the server before creating or deleting OAuth clients.</p><div class="statline"><span>Server-side authorization</span><span class="tag">Enabled</span></div><div class="statline"><span>Secrets in browser bundle</span><span class="tag">Never</span></div><div class="statline"><span>Redirect URI validation</span><span class="tag">Strict</span></div></article>
 </div>
@@ -79,6 +82,18 @@ const formStatus=document.getElementById("oauthFormStatus");
 const createForm=document.getElementById("oauthCreateForm");
 const createButton=document.getElementById("createOAuthButton");
 const resultPanel=document.getElementById("newClientResult");
+const existingLogoInput=document.getElementById("existingLogoInput");
+let brandingTarget=null;
+async function uploadLogo(file,clientId){
+ if(!file) return null;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type)) throw new Error("Choose a PNG, JPG or WebP image.");
+ if(file.size>2*1024*1024) throw new Error("Logo must be 2 MB or smaller.");
+ const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+ const path=String(clientId).replace(/[^a-zA-Z0-9_-]/g,"_")+"/"+Date.now()+"."+ext;
+ const {error}=await client.storage.from("oauth-app-logos").upload(path,file,{contentType:file.type,cacheControl:"3600",upsert:false});
+ if(error) throw error;
+ return client.storage.from("oauth-app-logos").getPublicUrl(path).data.publicUrl;
+}
 function showApiStatus(message,isError=false){apiStatus.textContent=message;apiStatus.className="state"+(isError?" err":"");}
 function cell(text){const el=document.createElement("td");el.textContent=text||"—";return el;}
 async function callOAuthApi(payload){
@@ -93,7 +108,7 @@ async function loadOAuthClients(){
   const data=await callOAuthApi({action:"list"});
   const clients=Array.isArray(data.clients)?data.clients:[];
   clientCount.textContent=clients.length+" client"+(clients.length===1?"":"s");
-  if(!clients.length){const row=document.createElement("tr"),empty=cell("No OAuth clients registered yet. Create the first one using the form above.");empty.colSpan=6;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("No registered clients yet. Create your first OAuth client above.");return;}
+  if(!clients.length){const row=document.createElement("tr"),empty=cell("No OAuth clients registered yet. Create the first one using the form above.");empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("No registered clients yet. Create your first OAuth client above.");return;}
   for(const item of clients){
    const row=document.createElement("tr");
    row.append(cell(item.name),cell(item.client_id||item.id),cell(item.client_type||"—"));
@@ -101,6 +116,7 @@ async function loadOAuthClients(){
    const uriCell=cell(uris);uriCell.style.whiteSpace="pre-line";uriCell.style.overflowWrap="anywhere";row.append(uriCell);
    let created="—";if(item.created_at){const date=new Date(item.created_at);if(!Number.isNaN(date.getTime()))created=date.toLocaleDateString();}
    row.append(cell(created));
+   const branding=cell("");const brandBtn=document.createElement("button");brandBtn.type="button";brandBtn.className="secondary";brandBtn.textContent="Upload logo";brandBtn.addEventListener("click",()=>{brandingTarget={client_id:item.client_id||item.id,name:item.name||"OAuth application"};existingLogoInput.click();});branding.append(brandBtn);row.append(branding);
    const action=cell("");const del=document.createElement("button");del.type="button";del.className="secondary";del.textContent="Delete";del.setAttribute("aria-label","Delete OAuth client "+(item.name||item.client_id||""));
    del.addEventListener("click",async()=>{
     const id=item.client_id||item.id;if(!id)return;
@@ -111,19 +127,40 @@ async function loadOAuthClients(){
    });action.append(del);row.append(action);clientsBody.append(row);
   }
   showApiStatus("Client registry loaded securely from Supabase Auth.");
- }catch(e){clientCount.textContent="Unavailable";const row=document.createElement("tr"),empty=cell("Could not load clients. "+e.message);empty.colSpan=6;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("Could not load OAuth clients: "+e.message,true);}
+ }catch(e){clientCount.textContent="Unavailable";const row=document.createElement("tr"),empty=cell("Could not load clients. "+e.message);empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("Could not load OAuth clients: "+e.message,true);}
 }
+existingLogoInput.addEventListener("change",async()=>{
+ const file=existingLogoInput.files?.[0],target=brandingTarget;
+ existingLogoInput.value="";brandingTarget=null;
+ if(!file||!target)return;
+ showApiStatus("Uploading logo for "+target.name+"…");
+ try{
+  const logo_url=await uploadLogo(file,target.client_id);
+  await callOAuthApi({action:"branding",client_id:target.client_id,application_name:target.name,logo_url});
+  await loadOAuthClients();
+  showApiStatus("Logo saved for "+target.name+". It will appear on future consent screens.");
+ }catch(e){showApiStatus("Logo upload failed: "+e.message,true);}
+});
 createForm.addEventListener("submit",async(event)=>{
  event.preventDefault();formStatus.textContent="Creating client securely…";createButton.disabled=true;resultPanel.classList.add("hidden");
  const name=document.getElementById("oauthName").value.trim();
  const client_type=document.getElementById("oauthType").value;
  const redirect_uris=document.getElementById("oauthRedirects").value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
+ const website_url=document.getElementById("oauthWebsite").value.trim()||null;
+ const logoFile=document.getElementById("oauthLogo").files?.[0]||null;
  try{
   const data=await callOAuthApi({action:"create",name,client_type,redirect_uris});
   const item=data.client||{};
+  const createdId=item.client_id||item.id;
+  let brandingNotice="";
+  try{
+   const logo_url=logoFile?await uploadLogo(logoFile,createdId):null;
+   await callOAuthApi({action:"branding",client_id:createdId,application_name:name,website_url,logo_url});
+   brandingNotice=logo_url?" Application name and logo saved.":" Application name saved; you can upload a logo later.";
+  }catch(brandingError){brandingNotice=" Branding could not be saved: "+brandingError.message;}
   resultPanel.replaceChildren();resultPanel.classList.remove("hidden");
   const heading=document.createElement("strong");heading.textContent="OAuth client created successfully";resultPanel.append(heading);
-  const desc=document.createElement("p");desc.textContent="Copy the client ID into your connecting app. "+(data.secret_notice||"This public client does not have a client secret.");desc.style.fontSize="12px";resultPanel.append(desc);
+  const desc=document.createElement("p");desc.textContent="Copy the client ID into your connecting app. "+(data.secret_notice||"This public client does not have a client secret.")+brandingNotice;desc.style.fontSize="12px";resultPanel.append(desc);
   const addCopyField=(label,value,secret=false)=>{
    if(!value)return;const wrap=document.createElement("div");wrap.style.marginTop="12px";
    const l=document.createElement("label");l.textContent=label;l.style.display="block";l.style.fontSize="11px";l.style.marginBottom="5px";wrap.append(l);
