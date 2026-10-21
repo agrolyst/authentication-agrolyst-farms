@@ -84,6 +84,79 @@ button.secondary,.button.secondary{background:#fff;border-color:#d9e4da;color:#4
 @media(max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start}.profile-card{max-width:100%}}
 @media(max-width:580px){.wrap{padding:25px 14px 40px}.hero{display:block}.profile-card{margin-top:18px;min-width:0}.metrics{gap:9px}.metric-card{padding:14px}.metric-card>strong{font-size:27px}.quick-grid{grid-template-columns:1fr}.workspace-status{margin-top:4px}.section-head h2{font-size:19px}}
 
+
+/* Production-style OAuth application registry */
+body{background:#f3f6f3;color:#17251b}
+.site-header{background:#fff;border-bottom-color:#e2e9e3;box-shadow:0 2px 12px #193b2308}
+.brand-name{color:#193b25}.brand-name small{color:#7a887d}
+.nav a{color:#647468}.nav a:hover,.nav a:focus{background:#edf6ef;color:#176c3c}
+.admin-chip{color:#176c3c;border-color:#d5e7d8;background:#f3faf4}
+.wrap{max-width:1380px;padding-top:32px}
+.state{background:#fff;border-color:#dfe7e0;color:#607365}
+button,.button{background:#176c3c;border-color:#176c3c;color:#fff;border-radius:10px}
+button:hover,.button:hover{background:#11552f;border-color:#11552f}
+button.secondary,.button.secondary{background:#fff;color:#425a49;border-color:#d9e4da}
+.hero h1{font-size:clamp(30px,3.7vw,45px);color:#172d1e}
+.hero p,.section-head p{color:#718075}
+.eyebrow{color:#176c3c}
+.metrics{margin-bottom:26px}
+.metric-card,.profile-card,.quick-card,.card{background:#fff;border-color:#e0e8e1;box-shadow:0 5px 22px #193b2305}
+.client-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.client-card{min-width:0;background:#fff;border:1px solid #dfe8e0;border-radius:17px;padding:19px;box-shadow:0 5px 22px #193b2305;transition:box-shadow .2s,border-color .2s}
+.client-card:hover{border-color:#c8dccb;box-shadow:0 9px 28px #193b230a}
+.client-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.client-identity{display:flex;align-items:center;gap:12px;min-width:0}
+.client-logo{width:48px;height:48px;flex:none;display:grid;place-items:center;overflow:hidden;border:1px solid #e1e9e2;border-radius:13px;background:#f0f8f1;color:#176c3c;font-size:19px;font-weight:850}
+.client-logo img{width:100%;height:100%;object-fit:contain;background:#fff}
+.client-title{min-width:0}.client-title h3{font-size:15px;margin:0 0 3px;color:#203728;overflow-wrap:anywhere}
+.client-title p{font-size:11px;color:#728176;margin:0;overflow-wrap:anywhere}
+.client-id-block{margin-top:18px;padding:12px 13px;background:#f6f9f6;border:1px solid #e0e8e1;border-radius:12px}
+.client-id-caption{font-size:9px;font-weight:850;letter-spacing:.13em;color:#718176;margin-bottom:7px}
+.client-id-line{display:flex;align-items:center;gap:9px;min-width:0}
+.client-id-line code{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#203b29;overflow-wrap:anywhere;word-break:break-word;flex:1;min-width:0;user-select:all}
+.copy-client-id{padding:7px 10px;white-space:nowrap;font-size:10px;flex:none}
+.client-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0;color:#77857a;font-size:10px}
+.redirect-details{border-top:1px solid #e8eee8;padding:12px 0;color:#3f5a46}
+.redirect-details summary,.branding-editor summary{cursor:pointer;font-size:11px;font-weight:750;list-style:none;display:flex;align-items:center;gap:8px}
+.redirect-details summary::-webkit-details-marker,.branding-editor summary::-webkit-details-marker{display:none}
+.redirect-details summary:after,.branding-editor>summary:after{content:"＋";margin-left:auto;color:#176c3c;font-size:15px}
+.redirect-details[open] summary:after,.branding-editor[open]>summary:after{content:"−"}
+.redirect-list{display:grid;gap:7px;margin-top:10px}
+.redirect-list code{display:block;padding:8px 9px;background:#f7faf7;border:1px solid #e3ebe4;border-radius:8px;color:#506b56;font:10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.redirect-list p{font-size:11px;color:#77857a}
+.branding-editor{border-top:1px solid #e8eee8;padding:13px 0 0}
+.branding-editor>summary{color:#245a35}
+.branding-editor>summary>span{font-size:17px}
+.branding-body{padding-top:13px}
+.brand-preview{display:flex;align-items:center;gap:11px;padding:12px;background:#f0f8f1;border:1px solid #dceadd;border-radius:12px;margin-bottom:14px;min-width:0}
+.brand-preview-logo{width:40px;height:40px;display:grid;place-items:center;overflow:hidden;flex:none;border:1px solid #dbe8dc;border-radius:10px;background:#fff;color:#176c3c;font-weight:850}
+.brand-preview-logo img{width:100%;height:100%;object-fit:contain}
+.brand-preview-text{display:grid;gap:3px;min-width:0}
+.brand-preview-text strong{font-size:12px;color:#203728;overflow-wrap:anywhere}
+.brand-preview-text span{font-size:10px;color:#6e8072;overflow-wrap:anywhere}
+.branding-field{display:grid;gap:6px;margin:12px 0;font-size:11px;font-weight:750;color:#415a47}
+.branding-field input{width:100%;min-width:0;padding:10px 11px;border:1px solid #dbe5dc;border-radius:9px;background:#fbfdfb;color:#1e3525;font:12px system-ui,sans-serif}
+.branding-field input:focus{outline:2px solid #c8e6cd;outline-offset:1px;border-color:#9fcda7}
+.branding-field input[type=file]{font-size:10px;background:#fff}
+.branding-field small{font-size:10px;font-weight:500;color:#7b887e}
+.branding-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:15px}
+.save-brand{font-size:11px;padding:10px 13px}
+.brand-status{font-size:10px;color:#607766;overflow-wrap:anywhere}
+.client-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid #e8eee8;margin-top:14px;padding-top:13px}
+.branding-state{font-size:10px;color:#647969}.branding-state:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#3b9e60;margin-right:7px}
+.delete-client{background:#fff!important;border-color:#efd9d5!important;color:#9b3e31!important;font-size:10px;padding:8px 10px}
+.delete-client:hover{background:#fff6f4!important;border-color:#dfb8b1!important}
+.registry-empty{grid-column:1/-1;display:grid;justify-items:center;text-align:center;padding:38px 20px;border:1px dashed #ccdace;border-radius:16px;background:#fff;color:#6b7c70}
+.registry-empty strong{font-size:15px;color:#2a4331;margin-top:10px}
+.registry-empty p{max-width:470px;font-size:12px;line-height:1.7}
+.empty-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#edf7ef;color:#176c3c;font-size:23px}
+#oauthCreateForm input,#oauthCreateForm select,#oauthCreateForm textarea{background:#fbfdfb!important;color:#1e3525!important;border-color:#dce7dd!important}
+#oauthCreateForm input:focus,#oauthCreateForm select:focus,#oauthCreateForm textarea:focus{outline:2px solid #c5e5cb;outline-offset:1px}
+#newClientResult{background:#f0f8f1!important;border-color:#cfe5d3!important;color:#203728}
+.oauth-status{background:#fff9ec;border-color:#efdfb8}.oauth-status strong{color:#805a14}.oauth-status p{color:#796b4d}
+@media(max-width:850px){.client-grid{grid-template-columns:1fr}}
+@media(max-width:580px){.wrap{padding:24px 13px 38px}.client-card{padding:14px}.client-id-line{align-items:flex-start;flex-direction:column}.copy-client-id{align-self:flex-start}.hero h1{font-size:34px}.profile-card{min-width:0}.client-meta{align-items:flex-start;flex-direction:column}}
+
 </style>
 </head>
 <body>
@@ -132,7 +205,7 @@ button.secondary,.button.secondary{background:#fff;border-color:#d9e4da;color:#4
 <div class="section-head" id="registered-applications" style="margin-top:28px;margin-bottom:10px"><div><h2 style="font-size:17px">Registered applications</h2><p>Loaded directly from Supabase Auth. Secret values are never listed.</p></div><span id="oauthClientCount" class="tag">Loading…</span></div>
 <div id="oauthListStatus" class="state" style="margin-top:10px" aria-live="polite">Loading registered OAuth clients…</div>
 <input id="existingLogoInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden" aria-label="Choose a logo for an existing OAuth application">
-<div class="table-wrap"><table class="oauth-table" style="min-width:760px"><thead><tr><th>APPLICATION</th><th>CLIENT ID</th><th>TYPE</th><th>REDIRECT URI(S)</th><th>CREATED</th><th>BRANDING</th><th>ACTION</th></tr></thead><tbody id="oauthClientsBody"><tr><td colspan="7" class="empty">Loading registered applications…</td></tr></tbody></table></div>
+<div id="oauthClientsGrid" class="client-grid" aria-live="polite"><div class="registry-empty">Loading your registered applications…</div></div>
 </article>
 <article class="card" id="security"><div class="iconbox"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Security & access</h3><p>Every client-management request is verified by a protected Supabase Edge Function. It checks the active administrator record on the server before creating or deleting OAuth clients.</p><div class="statline"><span>Server-side authorization</span><span class="tag">Enabled</span></div><div class="statline"><span>Secrets in browser bundle</span><span class="tag">Never</span></div><div class="statline"><span>Redirect URI validation</span><span class="tag">Strict</span></div></article>
 </div>
@@ -189,55 +262,125 @@ async function callOAuthApi(payload){
  return data;
 }
 async function loadOAuthClients(){
- showApiStatus("Loading registered OAuth clients and saved branding…");clientsBody.replaceChildren();
+ showApiStatus("Syncing your OAuth registry and application branding…");
+ const grid=document.getElementById("oauthClientsGrid");
+ grid.replaceChildren();
  try{
   const data=await callOAuthApi({action:"list"});
   const clients=Array.isArray(data.clients)?data.clients:[];
   const {data:brandRows,error:brandError}=await client.from("oauth_client_branding").select("client_id,application_name,logo_url,website_url,verification_status,updated_at");
   if(brandError) throw new Error("Clients loaded, but saved branding could not be read: "+brandError.message);
   const brandMap=new Map((brandRows||[]).map(b=>[b.client_id,b]));
-  clientCount.textContent=clients.length+" client"+(clients.length===1?"":"s");
+  clientCount.textContent=clients.length+" app"+(clients.length===1?"":"s");
   document.getElementById("metricTotalClients").textContent=String(clients.length);
   document.getElementById("metricPublicClients").textContent=String(clients.filter(x=>(x.client_type||x.type||"").toLowerCase()==="public").length);
   document.getElementById("metricConfidentialClients").textContent=String(clients.filter(x=>(x.client_type||x.type||"").toLowerCase()==="confidential").length);
-  document.getElementById("metricBrandedClients").textContent=String((brandRows||[]).filter(b=>b.application_name||b.logo_url).length);
-
-  if(!clients.length){const row=document.createElement("tr"),empty=cell("No OAuth clients registered yet. Create the first one using the form above.");empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("No registered clients yet. Create your first OAuth client above.");return;}
+  document.getElementById("metricBrandedClients").textContent=String((brandRows||[]).filter(b=>b.application_name||b.logo_url||b.website_url).length);
+  if(!clients.length){
+   const empty=document.createElement("div");empty.className="registry-empty";
+   empty.innerHTML='<div class="empty-mark">＋</div><strong>No OAuth applications yet</strong><p>Create your first application above. Once registered, its client ID, callback URLs and branding controls will appear here.</p>';
+   grid.append(empty);showApiStatus("Registry is ready. Create your first OAuth application above.");return;
+  }
   for(const item of clients){
    const id=item.client_id||item.id;
-   const saved=brandMap.get(id);
-   const shownName=saved?.application_name||item.name||"OAuth application";
-   const row=document.createElement("tr");
-   const nameCell=cell("");
-   const nameWrap=document.createElement("div");nameWrap.style.display="flex";nameWrap.style.alignItems="center";nameWrap.style.gap="9px";
-   if(saved?.logo_url){const img=document.createElement("img");img.src=saved.logo_url;img.alt="";img.loading="lazy";img.style.width="36px";img.style.height="36px";img.style.objectFit="contain";img.style.borderRadius="8px";img.style.border="1px solid var(--line)";img.style.background="#fff";nameWrap.append(img);}
-   const nameText=document.createElement("span");nameText.textContent=shownName;nameText.style.fontWeight="700";nameWrap.append(nameText);
-   if(saved?.verification_status==="verified"){const verified=document.createElement("span");verified.className="tag";verified.textContent="Verified";nameWrap.append(verified);}
-   nameCell.append(nameWrap);row.append(nameCell,cell(id),cell(item.client_type||"—"));
-   const uris=Array.isArray(item.redirect_uris)?item.redirect_uris.join("\n"):String(item.redirect_uris||"—");
-   const uriCell=cell(uris);uriCell.style.whiteSpace="pre-line";uriCell.style.overflowWrap="anywhere";row.append(uriCell);
-   let created="—";if(item.created_at){const date=new Date(item.created_at);if(!Number.isNaN(date.getTime()))created=date.toLocaleDateString();}
-   row.append(cell(created));
-   const branding=cell("");branding.style.minWidth="180px";
-   const editName=document.createElement("input");editName.type="text";editName.value=saved?.application_name||item.name||"";editName.maxLength=100;editName.placeholder="Application display name";editName.style.width="100%";editName.style.padding="8px";editName.style.marginBottom="7px";editName.style.borderRadius="8px";editName.style.border="1px solid var(--line)";editName.style.background="#071a10";editName.style.color="var(--text)";editName.style.font="inherit";branding.append(editName);
-   const saveName=document.createElement("button");saveName.type="button";saveName.className="secondary";saveName.textContent="Save name";saveName.addEventListener("click",async()=>{
-    const newName=editName.value.trim();if(newName.length<2){showApiStatus("Application name must contain at least 2 characters.",true);return;}
-    saveName.disabled=true;saveName.textContent="Saving…";
-    try{await callOAuthApi({action:"branding",client_id:id,application_name:newName,website_url:saved?.website_url||null,logo_url:saved?.logo_url||null});await loadOAuthClients();showApiStatus("Saved display name for "+newName+".");}
-    catch(e){saveName.disabled=false;saveName.textContent="Save name";showApiStatus("Could not save application name: "+e.message,true);}
-   });branding.append(saveName);
-   const brandBtn=document.createElement("button");brandBtn.type="button";brandBtn.className="secondary";brandBtn.textContent=saved?.logo_url?"Replace logo":"Upload logo";brandBtn.style.marginTop="7px";brandBtn.addEventListener("click",()=>{brandingTarget={client_id:id,name:editName.value.trim()||shownName,website_url:saved?.website_url||null};existingLogoInput.click();});branding.append(brandBtn);row.append(branding);
-   const action=cell("");const del=document.createElement("button");del.type="button";del.className="secondary";del.textContent="Delete";del.setAttribute("aria-label","Delete OAuth client "+shownName);
+   const saved=brandMap.get(id)||{};
+   const baseName=item.name||"OAuth application";
+   const shownName=saved.application_name||baseName;
+   const type=(item.client_type||item.type||"public").toLowerCase();
+   const created=item.created_at?new Date(item.created_at).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"Date unavailable";
+   const card=document.createElement("article");card.className="client-card";
+   const top=document.createElement("div");top.className="client-card-top";
+   const identity=document.createElement("div");identity.className="client-identity";
+   const logo=document.createElement("div");logo.className="client-logo";
+   if(saved.logo_url){const img=document.createElement("img");img.src=saved.logo_url;img.alt=shownName+" logo";img.loading="lazy";logo.append(img);}
+   else {const fallback=document.createElement("span");fallback.textContent=(shownName.match(/[A-Za-z0-9]/)?.[0]||"A").toUpperCase();logo.append(fallback);}
+   const titleWrap=document.createElement("div");titleWrap.className="client-title";
+   const title=document.createElement("h3");title.textContent=shownName;
+   const sub=document.createElement("p");sub.textContent=saved.website_url||"No application website added";
+   titleWrap.append(title,sub);identity.append(logo,titleWrap);
+   const typeTag=document.createElement("span");typeTag.className="tag";typeTag.textContent=type==="confidential"?"Confidential":"Public";
+   top.append(identity,typeTag);card.append(top);
+   const idBlock=document.createElement("div");idBlock.className="client-id-block";
+   const idCaption=document.createElement("div");idCaption.className="client-id-caption";idCaption.textContent="CLIENT ID";
+   const idLine=document.createElement("div");idLine.className="client-id-line";
+   const idValue=document.createElement("code");idValue.textContent=id||"Unavailable";idValue.title=id||"";
+   const copy=document.createElement("button");copy.type="button";copy.className="copy-client-id";copy.textContent="Copy ID";
+   copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(id);copy.textContent="Copied ✓";}catch{const ta=document.createElement("textarea");ta.value=id;document.body.append(ta);ta.select();const ok=document.execCommand("copy");ta.remove();copy.textContent=ok?"Copied ✓":"Select ID";}});
+   idLine.append(idValue,copy);idBlock.append(idCaption,idLine);card.append(idBlock);
+   const meta=document.createElement("div");meta.className="client-meta";
+   const createdMeta=document.createElement("span");createdMeta.textContent="Created "+created;
+   const redirectUris=Array.isArray(item.redirect_uris)?item.redirect_uris:(typeof item.redirect_uris==="string"?item.redirect_uris.split(/\r?\n/).filter(Boolean):[]);
+   const redirectMeta=document.createElement("span");redirectMeta.textContent=redirectUris.length+" callback URI"+(redirectUris.length===1?"":"s");
+   meta.append(createdMeta,redirectMeta);card.append(meta);
+   const redirects=document.createElement("details");redirects.className="redirect-details";
+   const summary=document.createElement("summary");summary.textContent="View registered redirect URLs";
+   const redirectList=document.createElement("div");redirectList.className="redirect-list";
+   if(redirectUris.length){redirectUris.forEach(uri=>{const line=document.createElement("code");line.textContent=uri;redirectList.append(line);});}
+   else {const none=document.createElement("p");none.textContent="No redirect URIs returned by the registry.";redirectList.append(none);}
+   redirects.append(summary,redirectList);card.append(redirects);
+   const editor=document.createElement("details");editor.className="branding-editor";editor.open=false;
+   const editorSummary=document.createElement("summary");editorSummary.innerHTML='<span>✧</span> Customize application branding';
+   editor.append(editorSummary);
+   const editorBody=document.createElement("div");editorBody.className="branding-body";
+   const preview=document.createElement("div");preview.className="brand-preview";
+   const previewLogo=document.createElement("div");previewLogo.className="brand-preview-logo";
+   if(saved.logo_url){const im=document.createElement("img");im.src=saved.logo_url;im.alt="";previewLogo.append(im);}else{const mark=document.createElement("span");mark.textContent=(shownName.match(/[A-Za-z0-9]/)?.[0]||"A").toUpperCase();previewLogo.append(mark);}
+   const previewText=document.createElement("div");previewText.className="brand-preview-text";
+   const previewName=document.createElement("strong");previewName.textContent=shownName;
+   const previewWebsite=document.createElement("span");previewWebsite.textContent=saved.website_url||"Your application name and logo appear on the consent screen";
+   previewText.append(previewName,previewWebsite);preview.append(previewLogo,previewText);editorBody.append(preview);
+   const nameField=document.createElement("label");nameField.className="branding-field";nameField.textContent="Display name";
+   const nameInput=document.createElement("input");nameInput.type="text";nameInput.maxLength=100;nameInput.required=true;nameInput.value=saved.application_name||baseName;nameInput.placeholder="Your application name";
+   nameField.append(nameInput);editorBody.append(nameField);
+   const websiteField=document.createElement("label");websiteField.className="branding-field";websiteField.textContent="Application website";
+   const websiteInput=document.createElement("input");websiteInput.type="url";websiteInput.value=saved.website_url||"";websiteInput.placeholder="https://your-app.example.com";
+   websiteField.append(websiteInput);editorBody.append(websiteField);
+   const logoField=document.createElement("label");logoField.className="branding-field";logoField.textContent="Application logo";
+   const logoInput=document.createElement("input");logoInput.type="file";logoInput.accept="image/png,image/jpeg,image/webp";
+   const logoHelp=document.createElement("small");logoHelp.textContent="PNG, JPG or WebP · up to 2 MB";
+   logoField.append(logoInput,logoHelp);editorBody.append(logoField);
+   const updatePreview=()=>{
+    const n=nameInput.value.trim()||baseName,w=websiteInput.value.trim();
+    previewName.textContent=n;previewWebsite.textContent=w||"Your application name and logo appear on the consent screen";
+    if(!logoInput.files?.length){previewLogo.replaceChildren();if(saved.logo_url){const im=document.createElement("img");im.src=saved.logo_url;im.alt="";previewLogo.append(im);}else{const mark=document.createElement("span");mark.textContent=(n.match(/[A-Za-z0-9]/)?.[0]||"A").toUpperCase();previewLogo.append(mark);}}
+    else {const im=document.createElement("img");im.alt="Logo preview";im.src=URL.createObjectURL(logoInput.files[0]);previewLogo.replaceChildren(im);}
+   };
+   nameInput.addEventListener("input",updatePreview);websiteInput.addEventListener("input",updatePreview);logoInput.addEventListener("change",updatePreview);
+   const editorActions=document.createElement("div");editorActions.className="branding-actions";
+   const saveBrand=document.createElement("button");saveBrand.type="button";saveBrand.textContent="Save branding";saveBrand.className="save-brand";
+   const brandStatus=document.createElement("span");brandStatus.className="brand-status";brandStatus.setAttribute("aria-live","polite");
+   saveBrand.addEventListener("click",async()=>{
+    const newName=nameInput.value.trim(),newWebsite=websiteInput.value.trim()||null,file=logoInput.files?.[0]||null;
+    if(newName.length<2){brandStatus.textContent="Enter a name with at least 2 characters.";return;}
+    if(newWebsite){try{const parsed=new URL(newWebsite);if(parsed.protocol!=="https:")throw new Error();}catch{brandStatus.textContent="Enter a valid HTTPS website URL.";return;}}
+    saveBrand.disabled=true;brandStatus.textContent="Saving branding…";
+    try{
+     let logo_url=saved.logo_url||null;
+     if(file)logo_url=await uploadLogo(file,id);
+     await callOAuthApi({action:"branding",client_id:id,application_name:newName,website_url:newWebsite,logo_url});
+     brandStatus.textContent="Branding saved successfully.";
+     await loadOAuthClients();
+    }catch(e){brandStatus.textContent="Save failed: "+e.message;saveBrand.disabled=false;}
+   });
+   editorActions.append(saveBrand,brandStatus);editorBody.append(editorActions);editor.append(editorBody);card.append(editor);
+   const bottom=document.createElement("div");bottom.className="client-card-bottom";
+   const brandingStatus=document.createElement("span");brandingStatus.className="branding-state";
+   brandingStatus.textContent=(saved.application_name||saved.logo_url||saved.website_url)?"Custom branding saved":"Default branding";
+   const del=document.createElement("button");del.type="button";del.className="delete-client";del.textContent="Delete app";
    del.addEventListener("click",async()=>{
-    if(!id)return;
-    if(!window.confirm("Delete OAuth client “"+shownName+"”? Apps using it will no longer be able to start new authorizations."))return;
+    if(!window.confirm("Delete OAuth application “"+shownName+"”? Existing integrations will stop authorizing new connections."))return;
     del.disabled=true;del.textContent="Deleting…";
-    try{await callOAuthApi({action:"delete",client_id:id});await loadOAuthClients();showApiStatus("OAuth client deleted.");}
-    catch(e){del.disabled=false;del.textContent="Delete";showApiStatus(e.message,true);}
-   });action.append(del);row.append(action);clientsBody.append(row);
+    try{await callOAuthApi({action:"delete",client_id:id});await loadOAuthClients();showApiStatus("OAuth application deleted.");}
+    catch(e){del.disabled=false;del.textContent="Delete app";showApiStatus("Delete failed: "+e.message,true);}
+   });
+   bottom.append(brandingStatus,del);card.append(bottom);grid.append(card);
   }
-  showApiStatus("Client registry loaded. Saved application names and logos are shown from Supabase.");
- }catch(e){clientCount.textContent="Unavailable";const row=document.createElement("tr"),empty=cell("Could not load clients or saved branding. "+e.message);empty.colSpan=7;empty.className="empty";row.append(empty);clientsBody.append(row);showApiStatus("Could not load OAuth clients: "+e.message,true);}
+  showApiStatus("OAuth registry synced. Client IDs are visible and branding controls are available on each application card.");
+ }catch(e){
+  clientCount.textContent="Unavailable";
+  const empty=document.createElement("div");empty.className="registry-empty";empty.textContent="Could not load OAuth applications: "+e.message;grid.append(empty);
+  showApiStatus("Could not load OAuth clients: "+e.message,true);
+ }
 }
 existingLogoInput.addEventListener("change",async()=>{
  const file=existingLogoInput.files?.[0],target=brandingTarget;
