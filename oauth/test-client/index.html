@@ -12,8 +12,9 @@
 <body><main class="shell">
 <header class="brand"><img src="https://agrolystfarms.com/favicon.jpeg" alt="Agrolyst Farms"><div><strong>AGROLYST FARMS</strong><small>Authentication · OAuth test client</small></div></header>
 <section class="panel">
-<div class="eyebrow">Developer test utility</div><h1>Test “Connect with Agrolyst”</h1>
-<p>This temporary test client starts a real OAuth authorization request against the Agrolyst Supabase Auth server. It uses Authorization Code + PKCE and checks the returned state. Use a test seller account.</p>
+<div class="eyebrow">Developer test utility · Dedicated auth project</div><h1>Test “Connect with Agrolyst”</h1>
+<p>This test client uses the dedicated Agrolyst Authentication Supabase project for OAuth requests and reads application display names and logos from its branding database and Storage bucket. It uses Authorization Code + PKCE and verifies the returned state. Use a test seller account.</p>
+<div id="appPreview" class="notice hidden" style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><img id="appLogo" alt="" class="hidden" style="width:46px;height:46px;object-fit:contain;border-radius:12px;background:#071a10;padding:4px"><div><strong id="appName" style="display:block;color:var(--text)">OAuth application</strong><span class="small">Branding loaded from authentication storage</span></div></div>
 <div id="start">
 <label for="clientId">OAuth client ID</label><input id="clientId" autocomplete="off" spellcheck="false" placeholder="Paste the public test client ID from Supabase">
 <label for="scope">Requested scope</label><input id="scope" value="email" autocomplete="off">
@@ -28,9 +29,36 @@
 <script>
 (() => {
   const SUPABASE_URL = "https://hbfhrilouvbvcpfqwmta.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WNH9qs8wMS_umvpfUmccUA_h2lJ-yyu";
+  const authClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { "X-Client-Info": "agrolyst-oauth-test-client/1.1" } }
+  });
   const $ = (id) => document.getElementById(id);
   const redirectUri = window.location.origin + window.location.pathname;
   $("redirectUri").textContent = redirectUri;
+  async function loadClientBranding(clientId) {
+    const preview = $("appPreview");
+    const name = $("appName");
+    const logo = $("appLogo");
+    preview.classList.add("hidden");
+    logo.classList.add("hidden");
+    if (!clientId || !authClient) return;
+    const { data, error } = await authClient
+      .from("oauth_client_branding")
+      .select("application_name,logo_url")
+      .eq("client_id", clientId)
+      .maybeSingle();
+    if (error || !data) return;
+    name.textContent = data.application_name || "OAuth application";
+    if (data.logo_url) {
+      logo.src = data.logo_url;
+      logo.alt = (data.application_name || "OAuth application") + " logo";
+      logo.classList.remove("hidden");
+      logo.onerror = () => logo.classList.add("hidden");
+    }
+    preview.classList.remove("hidden");
+  }
   const params = new URLSearchParams(window.location.search);
   const status = (message, kind = "") => {
     $("status").textContent = message;
@@ -74,10 +102,13 @@
     sessionStorage.removeItem("agrolyst_oauth_verifier");
     history.replaceState({}, document.title, redirectUri);
   } else {
+    $("clientId").addEventListener("change", () => loadClientBranding($("clientId").value.trim()));
+    $("clientId").addEventListener("blur", () => loadClientBranding($("clientId").value.trim()));
     $("connect").addEventListener("click", async () => {
       const clientId = $("clientId").value.trim();
       const scope = $("scope").value.trim() || "email";
       if (!clientId) { status("Paste the public OAuth test client ID first.", "error"); return; }
+      await loadClientBranding(clientId);
       if (!window.crypto || !crypto.subtle) { status("Secure Web Crypto is unavailable. Open this page over HTTPS.", "error"); return; }
       $("connect").disabled = true;
       try {
